@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pair Students</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700&display=swap');
+    body { background-color: #f5f5f5; }
+    .list-group-item { cursor: pointer; }
+    .unpaired { background-color: #f8d7da; }
+    .paired { background-color: #d4edda; }
+  </style>
+</head>
+<body>
+  <%- include('partials/admin_navbar') %>
+
+  <div class="container mt-5">
+    <h2>Pair Students</h2>
+    
+    <div class="row">
+      <div class="col-md-6">
+        <h3>Mentors</h3>
+        <div class="form-group">
+          <label for="mentorSort">Sort by</label>
+          <select class="form-control" id="mentorSort" onchange="sortList('mentor-list', this.value)">
+            <option value="name">Name</option>
+            <option value="gender">Gender</option>
+            <option value="school">School</option>
+            <option value="grade">Grade</option>
+          </select>
+        </div>
+        <ul class="list-group" id="mentor-list">
+          <% mentors.forEach(function(mentor) { %>
+            <li class="list-group-item <%= mentor.mentee ? 'paired' : 'unpaired' %>" data-id="<%= mentor._id %>" data-name="<%= mentor.name %>" data-gender="<%= mentor.gender %>" data-school="<%= mentor.school %>" data-grade="<%= mentor.grade %>" data-mentee-id="<%= mentor.mentee ? mentor.mentee._id : '' %>">
+              <%= mentor.name %> - <%= mentor.gender %> - <%= mentor.school %> - <%= mentor.grade %><br>
+              <strong>Mentee:</strong> <%= mentor.mentee ? mentor.mentee.name : 'None' %>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <h3>Mentees</h3>
+        <div class="form-group">
+          <label for="menteeSort">Sort by</label>
+          <select class="form-control" id="menteeSort" onchange="sortList('mentee-list', this.value)">
+            <option value="name">Name</option>
+            <option value="gender">Gender</option>
+            <option value="school">School</option>
+            <option value="grade">Grade</option>
+          </select>
+        </div>
+        <ul class="list-group" id="mentee-list">
+          <% mentees.forEach(function(mentee) { %>
+            <li class="list-group-item <%= mentee.mentor ? 'paired' : 'unpaired' %>" data-id="<%= mentee._id %>" data-name="<%= mentee.name %>" data-gender="<%= mentee.gender %>" data-school="<%= mentee.school %>" data-grade="<%= mentee.grade %>" data-mentor-id="<%= mentee.mentor ? mentee.mentor._id : '' %>">
+              <%= mentee.name %> - <%= mentee.gender %> - <%= mentee.school %> - <%= mentee.grade %><br>
+              <strong>Mentor:</strong> <%= mentee.mentor ? mentee.mentor.name : 'None' %>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button class="btn btn-primary" id="pairButton" onclick="pairStudents()">Pair</button>
+      <button class="btn btn-danger" id="unpairButton" onclick="unpairStudents()">Unpair</button>
+    </div>
+    <div class="mt-3 alert alert-danger" id="error-message" style="display: none;"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    
+    let selectedMentor = null;
+    let selectedMentee = null;
+
+    document.querySelectorAll('#mentor-list .list-group-item').forEach(item => {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('#mentor-list .list-group-item').forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+        selectedMentor = this.getAttribute('data-id');
+      });
+    });
+
+    document.querySelectorAll('#mentee-list .list-group-item').forEach(item => {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('#mentee-list .list-group-item').forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+        selectedMentee = this.getAttribute('data-id');
+      });
+    });
+
+    function pairStudents() {
+      if (selectedMentor && selectedMentee) {
+        fetch('/admin/pair', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ mentorId: selectedMentor, menteeId: selectedMentee })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Successfully paired mentor and mentee');
+            window.location.reload();
+          } else {
+            alert('Error pairing mentor and mentee');
+          }
+        });
+      } else {
+        alert('Please select both a mentor and a mentee');
+      }
+    }
+
+    function unpairStudents() {
+      if (selectedMentor && selectedMentee) {
+        const mentorElement = document.querySelector(`#mentor-list .list-group-item[data-id="${selectedMentor}"]`);
+        const menteeElement = document.querySelector(`#mentee-list .list-group-item[data-id="${selectedMentee}"]`);
+
+        const mentorMenteeId = mentorElement.getAttribute('data-mentee-id');
+        const menteeMentorId = menteeElement.getAttribute('data-mentor-id');
+
+        if (mentorMenteeId === selectedMentee && menteeMentorId === selectedMentor) {
+          fetch('/admin/unpair', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ mentorId: selectedMentor, menteeId: selectedMentee })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              alert('Successfully unpaired mentor and mentee');
+              window.location.reload();
+            } else {
+              alert('Error unpairing mentor and mentee');
+            }
+          });
+        } else {
+          document.getElementById('error-message').style.display = 'block';
+          document.getElementById('error-message').innerText = 'You need to select a valid pairing before unpairing';
+        }
+      } else {
+        alert('Please select both a mentor and a mentee');
+      }
+    }
+
+    function sortList(listId, sortBy) {
+      const list = document.getElementById(listId);
+      const items = Array.from(list.getElementsByClassName('list-group-item'));
+      items.sort((a, b) => {
+        const aValue = a.getAttribute(`data-${sortBy}`).toLowerCase();
+        const bValue = b.getAttribute(`data-${sortBy}`).toLowerCase();
+        return aValue.localeCompare(bValue);
+      });
+      items.forEach(item => list.appendChild(item));
+    }
+  </script>
+</body>
+</html>

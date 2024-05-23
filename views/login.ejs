@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container">
+    <!-- Align the login box to the middle of the page -->
+    <div class="row justify-content-center align-items-center vh-100">
+      <div class="col-md-6 col-lg-4">
+        <!-- Bootstrap card for login form -->
+        <div class="card">
+          <div class="card-body">
+            <h1 class="card-title text-center">Log In</h1>
+            <form action="/login" method="POST">
+              <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required class="form-control" placeholder="Enter username">
+              </div>
+              <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required class="form-control" placeholder="Enter password">
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+            <div class="text-center mt-4">
+              <p>Don't have an account? <a href="/register" class="text-primary">Register here</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

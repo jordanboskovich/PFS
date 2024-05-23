@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Partnership for Success</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+  
+   @import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+  
+   #pfsHeader{
+      font-family: ubuntu;
+      font-size: 5.3vw;
+      margin-left: 19vw;
+      margin-right: -1vw;
+      margin-top: 50px;
+    }
+  #pfsPic {
+    position: absolute;
+    left: 25px; 
+    top: 25px; 
+    width: 19vw;
+    min-width: 50px; 
+    z-index: 2; 
+  }
+  body {
+    background-color: #E0D3EC;
+  }
+  #navbar {
+    background-color: #E0D3EC; 
+    padding: 10px 0;
+    position: relative; 
+  }
+  .greeting {
+    margin: 20px 0;
+    text-align: center;
+    padding: 5px;
+    border-top: 3px solid #6FDD51;
+    border-bottom: 3px solid #6FDD51;
+    font-family: montserrat;
+    background-color: #f5f5f5;
+    font-size: 2.5vw;
+    margin-bottom: 50px;
+  }
+  .content-box {
+  position: relative; /* Set the position context for the absolute positioning of the background */
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 10px; /* Rounded corners */
+  border: 3px solid #6FDD51; /* Border color */
+  background-color: #f5f5f5;
+  transition: transform 0.3s ease;
+}
+    
+    
+ .linkBoxText {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 4vw;
+  background-image: linear-gradient(-100deg,
+      #732685 0%,
+      #732685 35%,
+      #E0D3EC 50%,
+      #732685 65%,
+      #732685 100%);
+  background-size: 170% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: textclip 13s linear infinite;
+}
+
+@keyframes textclip {
+  to {
+    background-position: 400% center;
+  }
+}
+
+
+    
+    .linkBoxP{
+      font-size: 2vw;
+    
+    }
+
+p {
+  font-family: montserrat;
+}
+    
+  .linkBox{
+      height: 55vh;
+    }
+    
+  .content-box:hover {
+    transform: scale(1.05); 
+  }
+
+  
+    @media (max-width: 575px) {
+    #pfsHeader {
+      margin-left: 25vw;
+    }
+       .greeting {
+    font-size: 20px;
+  }
+  }
+    
+    @media (max-width: 460px) {
+    #pfsHeader {
+      margin-top: 35px;
+    }
+  }
+    
+    @media (max-width: 768px) {
+      .linkBox{
+        height: 55vh;
+        margin-bottom: 20px;
+      }
+
+      .linkBoxText {
+        font-family: ubuntu;
+        font-size: 8.3vw;
+      }
+      
+      .linkBoxP{
+      font-size: 3vw;
+    }
+      
+      .content-box {
+        margin-bottom: 5px;
+        padding: 5px;
+      }
+  }
+    
+    
+    
+
+</style>
+</head>
+<body>
+  <div id="navbar" class="d-flex justify-content-center align-items-center">
+    <div class="container d-flex align-items-center justify-content-between">
+      <img id="pfsPic" src="/images/logo.png" alt="PFS Logo" class="rounded-circle">
+      <h1 id="pfsHeader">Partnership For Success</h1>
+      <div></div>
+    </div>
+  </div>
+  
+
+  <div class="greeting">
+    Hello, username
+  </div>
+  
+  
+<div class="container h-100">
+  <div class="row h-100">
+    <div class="col-md-6 d-flex linkBox">
+      <a href="/mentor/resources" class="text-decoration-none text-dark w-100">
+        <div class="content-box d-flex flex-column justify-content-center align-items-center h-100">
+          <h3 class="text-center linkBoxText">Mentor Resources</h3>
+          <p class="text-center linkBoxP">Description of the resources. Need help on this? </p>
+          <p class="text-center linkBoxP">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p> 
+        </div>
+      </a>
+    </div>
+    <div class="col-md-6 d-flex linkBox">
+      <a href="/mentor/profile" class="text-decoration-none text-dark w-100">
+        <div class="content-box d-flex flex-column justify-content-center align-items-center h-100">
+          <h3 class="text-center linkBoxText">My Profile</h3>
+          <p class="text-center linkBoxP">Get contact information for yourself and your mentee. Log meetings here.</p>
+          <p class="text-center linkBoxP">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+
+ 
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+

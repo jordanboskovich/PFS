@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Directory</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700&display=swap');
+    body { background-color: #f5f5f5; }
+    .nav-tabs { margin-bottom: 20px; }
+    .highlight { background-color: #f8d7da !important; } /* Custom highlight color */
+  </style>
+</head>
+<body>
+  <%- include('partials/admin_navbar') %>
+
+  <div class="container mt-5">
+    <h2>Admin Directory</h2>
+    
+    <ul class="nav nav-tabs" id="directoryTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="mentors-tab" data-toggle="tab" href="#mentors" role="tab" aria-controls="mentors" aria-selected="true">Mentors</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="mentees-tab" data-toggle="tab" href="#mentees" role="tab" aria-controls="mentees" aria-selected="false">Mentees</a>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="directoryTabContent">
+      <div class="tab-pane fade show active" id="mentors" role="tabpanel" aria-labelledby="mentors-tab">
+        <h3>Mentors</h3>
+        <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addMentorModal">Add Mentor</button>
+        <button class="btn btn-warning mb-3" id="resetMeetingsButton">Reset Meetings This Month</button>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Grade</th>
+              <th>School</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Gender</th>
+              <th>Mentee</th>
+              <th>Times Met This Month</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% mentors.forEach(function(mentor) { %>
+              <tr class="<%= mentor.timesMetThisMonth === 0 ? 'highlight' : '' %>">
+                <td><%= mentor.name %></td>
+                <td><%= mentor.grade %></td>
+                <td><%= mentor.school %></td>
+                <td><%= mentor.email %></td>
+                <td><%= mentor.phone %></td>
+                <td><%= mentor.gender %></td>
+                <td><%= mentor.mentee ? mentor.mentee.name : 'None' %></td>
+                <td><%= mentor.timesMetThisMonth %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tab-pane fade" id="mentees" role="tabpanel" aria-labelledby="mentees-tab">
+        <h3>Mentees</h3>
+        <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addMenteeModal">Add Mentee</button>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Grade</th>
+              <th>School</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Gender</th>
+              <th>Mentor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% mentees.forEach(function(mentee) { %>
+              <tr>
+                <td><%= mentee.name %></td>
+                <td><%= mentee.grade %></td>
+                <td><%= mentee.school %></td>
+                <td><%= mentee.email %></td>
+                <td><%= mentee.phone %></td>
+                <td><%= mentee.gender %></td>
+                <td><%= mentee.mentor ? mentee.mentor.name : 'None' %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Mentor Modal -->
+  <div class="modal fade" id="addMentorModal" tabindex="-1" aria-labelledby="addMentorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addMentorModalLabel">Add Mentor</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="/admin/addUser" method="POST">
+          <div class="modal-body">
+            <input type="hidden" name="role" value="mentor">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="grade">Grade</label>
+              <input type="number" class="form-control" id="grade" name="grade" required>
+            </div>
+            <div class="form-group">
+              <label for="school">School</label>
+              <input type="text" class="form-control" id="school" name="school" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input type="text" class="form-control" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+              <label for="gender">Gender</label>
+              <select class="form-control" id="gender" name="gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Add Mentor</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Mentee Modal -->
+  <div class="modal fade" id="addMenteeModal" tabindex="-1" aria-labelledby="addMenteeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addMenteeModalLabel">Add Mentee</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="/admin/addUser" method="POST">
+          <div class="modal-body">
+            <input type="hidden" name="role" value="mentee">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="grade">Grade</label>
+              <input type="number" class="form-control" id="grade" name="grade" required>
+            </div>
+            <div class="form-group">
+              <label for="school">School</label>
+              <input type="text" class="form-control" id="school" name="school" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input type="text" class="form-control" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+              <label for="gender">Gender</label>
+              <select class="form-control" id="gender" name="gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Add Mentee</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    document.getElementById('resetMeetingsButton').addEventListener('click', function() {
+      if (confirm('Are you sure you want to reset the meetings this month for all mentors?')) {
+        fetch('/admin/resetMeetings', {
+          method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Meetings reset successfully');
+            window.location.reload();
+          } else {
+            alert('Error resetting meetings');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

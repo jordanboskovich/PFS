@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Resources</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+    body { background-color: #f5f5f5; }
+  </style>
+</head>
+<body>
+  <%- include('partials/admin_navbar') %>
+
+  <div class="container mt-5">
+    <h2>Resources</h2>
+    <form action="/admin/resources/add" method="POST">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title" name="title" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="link">Link</label>
+        <input type="url" class="form-control" id="link" name="link" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Resource</button>
+    </form>
+
+    <hr>
+
+    <div class="row">
+      <% resources.forEach(function(resource) { %>
+        <div class="col-md-4">
+          <div class="card resource-card">
+            <div class="card-body">
+              <h5 class="card-title"><%= resource.title %></h5>
+              <p class="card-text"><%= resource.description %></p>
+              <a href="<%= resource.link %>" class="btn btn-primary" target="_blank">Go to Resource</a>
+              <form action="/admin/resources/delete/<%= resource._id %>" method="POST" style="margin-top: 10px;">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
