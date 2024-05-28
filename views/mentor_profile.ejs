@@ -6,29 +6,76 @@
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700&display=swap');
-    body { background-color: #f5f5f5; }
+    body { 
+      background-color: #f5f5f5;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    p {
+      margin-bottom: 5px;
+      color: #555;
+    }
+
+    strong {
+      color: #000;
+    }
+
+    .btn-primary {
+      background-color: #CBBBE7;
+      border-color: #CBBBE7;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background-color: #B7A4C0;
+      border-color: #B7A4C0;
+    }
+    .col-md-6{
+      margin-bottom: 10%;
+    }
   </style>
 </head>
 <body>
   <%- include('partials/student_navbar') %>
 
-  <div class="container mt-5">
-    <h2>Mentor Profile</h2>
-    <p><strong>Name:</strong> <%= mentor.name %></p>
-    <p><strong>Grade:</strong> <%= mentor.grade %></p>
-    <p><strong>School:</strong> <%= mentor.school %></p>
-    <p><strong>Email:</strong> <%= mentor.email %></p>
-    <p><strong>Phone:</strong> <%= mentor.phone %></p>
-    <p><strong>Gender:</strong> <%= mentor.gender %></p>
-    <p><strong>Mentee:</strong> <%= mentee ? mentee.name : 'None' %></p>
+<br><br><br><br>
 
-    <h3>Log Meeting</h3>
-    <form action="/mentor/logMeeting" method="POST">
-      <button type="submit" class="btn btn-primary">Log Meeting</button>
-    </form>
-
-    <h3 class="mt-5">Meetings This Month: <%= mentor.timesMetThisMonth %></h3>
-
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h2>Mentor Profile</h2>
+        <p><strong>Name:</strong> <%= mentor.name %></p>
+        <p><strong>Grade:</strong> <%= mentor.grade %></p>
+        <p><strong>School:</strong> <%= mentor.school %></p>
+        <p><strong>Email:</strong> <%= mentor.email %></p>
+        <p><strong>Phone:</strong> <%= mentor.phone %></p>
+        <p><strong>Gender:</strong> <%= mentor.gender %></p>
+        <p><strong>Mentee:</strong> <%= mentor.mentee ? mentor.mentee.name : 'None' %></p>
+        <br><br>
+        <h2>Mentee Information</h2>
+        <% if (mentee) { %>
+          <p><strong>Name:</strong> <%= mentee.name %></p>
+          <p><strong>Grade:</strong> <%= mentee.grade %></p>
+          <p><strong>School:</strong> <%= mentee.school %></p>
+          <p><strong>Email:</strong> <%= mentee.email %></p>
+          <p><strong>Phone:</strong> <%= mentee.phone %></p>
+          <p><strong>Gender:</strong> <%= mentee.gender %></p>
+        <% } else { %>
+          <p>No mentee assigned</p>
+        <% } %>
+      </div>
+      <div class="col-md-6">
+        <h2>Log Meeting</h2>
+        <form action="/mentor/logMeeting" method="POST">
+          <button type="submit" class="btn btn-primary">Log Meeting</button>
+        </form>
+        <h3 class="mt-5">Meetings This Month: <%= mentor.timesMetThisMonth %></h3>
+      </div>
+    </div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

@@ -29,8 +29,13 @@ export const isMentor = (req, res, next) => {
   res.status(403).send('Access denied');
 };
 
-export const admin_home = (req, res) => {
-  res.render('admin_home');
+export const admin_home = async (req, res) => {
+  try {
+    const admin = await User.findById(req.user._id);
+    res.render('admin_home', { admin }); // Pass admin object to the template
+  } catch (err) {
+    res.status(500).send('Server Error');
+  }
 };
 
 export const admin_directory = async (req, res) => {
@@ -58,9 +63,15 @@ export const admin_pair = async (req, res) => {
 };
 
 
-export const mentor_home = (req, res) => {
-  res.render('mentor_home');
+export const mentor_home = async (req, res) => {
+  try {
+    const mentor = await User.findById(req.user._id);
+    res.render('mentor_home', { mentor });
+  } catch (err) {
+    res.status(500).send('Server Error');
+  }
 };
+
 
 export const mentor_profile = async (req, res) => {
   try {

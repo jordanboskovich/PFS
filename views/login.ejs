@@ -4,6 +4,38 @@
     <title>Login</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('/images/login_wallpaper.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .card {
+            background-color: #CAF4D7;
+            border: 6px outset #CAF4D7;
+        }
+
+        .card-body {
+            background-color: white;
+            padding: 10%;
+        }
+
+        .form-control {
+            border-color: #CBBBE7;
+        }
+
+        .btn-primary {
+            background-color: #CBBBE7;
+            border-color: #CBBBE7;
+        }
+
+        .btn-primary:hover {
+            background-color: #B7A4C0;
+            border-color: #B7A4C0;
+        }
+    </style>
 </head>
 <body class="bg-light">
   <div class="container">
@@ -13,7 +45,7 @@
         <!-- Bootstrap card for login form -->
         <div class="card">
           <div class="card-body">
-            <h1 class="card-title text-center">Log In</h1>
+            <h1 class="card-title text-center">PFS Login In</h1>
             <form action="/login" method="POST">
               <div class="form-group">
                 <label for="username">Username:</label>
@@ -25,9 +57,6 @@
               </div>
               <button type="submit" class="btn btn-primary btn-block">Login</button>
             </form>
-            <div class="text-center mt-4">
-              <p>Don't have an account? <a href="/register" class="text-primary">Register here</a></p>
-            </div>
           </div>
         </div>
       </div>

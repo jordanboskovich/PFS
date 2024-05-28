@@ -6,10 +6,37 @@
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700&display=swap');
-    body { background-color: #f5f5f5; }
+    body { 
+      background-color: #f5f5f5; 
+      font-family: 'Montserrat', sans-serif;
+    }
     .list-group-item { cursor: pointer; }
     .unpaired { background-color: #f8d7da; }
     .paired { background-color: #d4edda; }
+    
+    .unpaired { background-color:#fff3cd; } /* Red color */
+    .paired { background-color: #CAF4D7 ; } /* Green color */
+    
+    .btn-primary:hover {
+      background-color: #85628D;
+      border-color: #85628D;
+    }
+    
+     .btn-primary {
+      background-color: #CBBBE7;
+      border-color: #CBBBE7;
+    }
+    
+     .btn-success:hover {
+      background-color: #629C75;
+      border-color: #629C75;
+    }
+    
+     .btn-success {
+      background-color: #9FD8B1;
+      border-color: #9FD8B1;
+    }
+    
   </style>
 </head>
 <body>
@@ -62,8 +89,8 @@
     </div>
 
     <div class="text-center mt-4">
-      <button class="btn btn-primary" id="pairButton" onclick="pairStudents()">Pair</button>
-      <button class="btn btn-danger" id="unpairButton" onclick="unpairStudents()">Unpair</button>
+      <button class="btn btn-success" id="pairButton" onclick="pairStudents()">Pair</button>
+      <button class="btn btn-primary" id="unpairButton" onclick="unpairStudents()">Unpair</button>
     </div>
     <div class="mt-3 alert alert-danger" id="error-message" style="display: none;"></div>
   </div>
