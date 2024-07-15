@@ -58,6 +58,7 @@
         <h3>Mentors</h3>
         <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addMentorModal">Add Mentor</button>
         <button class="btn btn-warning mb-3" id="resetMeetingsButton">Reset Meetings For New Month</button>
+        <button class="btn btn-danger mb-3" id="sendBulkRemindersButton">Send Reminder to All</button> <!-- New Button -->
         <table class="table">
           <thead>
             <tr>
@@ -69,6 +70,7 @@
               <th>Gender</th>
               <th>Mentee</th>
               <th>Times Met This Month</th>
+              <th>Action</th> <!-- New Column for Individual Reminder Button -->
             </tr>
           </thead>
           <tbody>
@@ -82,11 +84,15 @@
                 <td><%= mentor.gender %></td>
                 <td><%= mentor.mentee ? mentor.mentee.name : 'None' %></td>
                 <td><%= mentor.timesMetThisMonth %></td>
+                <td>
+                  <button class="btn btn-secondary sendReminderButton" data-email="<%= mentor.email %>">Send Reminder</button>
+                </td> <!-- New Button for Individual Reminder -->
               </tr>
             <% }) %>
           </tbody>
         </table>
       </div>
+    
 
       <div class="tab-pane fade" id="mentees" role="tabpanel" aria-labelledby="mentees-tab">
         <h3>Mentees</h3>
@@ -259,6 +265,46 @@
         });
       }
     });
+  
+    document.getElementById('sendBulkRemindersButton').addEventListener('click', function() {
+      if (confirm('Are you sure you want to send reminders to all mentors who haven\'t met with their mentees?')) {
+        fetch('/admin/sendBulkReminders', {
+          method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Reminder emails sent successfully');
+            window.location.reload();
+          } else {
+            alert('Error sending reminder emails');
+          }
+        });
+      }
+    });
+  
+    document.querySelectorAll('.sendReminderButton').forEach(button => {
+      button.addEventListener('click', function() {
+        const email = this.getAttribute('data-email');
+  
+        fetch('/admin/sendReminder', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Reminder email sent successfully');
+          } else {
+            alert('Error sending reminder email');
+          }
+        });
+      });
+    });
   </script>
+  
 </body>
 </html>

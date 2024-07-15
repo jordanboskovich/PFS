@@ -44,4 +44,11 @@ router.get('/logout', auth.logout);
 router.get('/register', auth.register);
 router.post('/register', auth.verifyRegister);
 
+router.post('/mentor/addNote', ctrl.isMentor, ctrl.addNote);
+router.get('/admin/notes', ctrl.isAdmin, ctrl.admin_notes);
+
+router.post('/admin/sendReminder', ctrl.isAdmin, ctrl.sendReminderEmail);
+router.post('/admin/sendBulkReminders', ctrl.isAdmin, ctrl.sendBulkReminders);
+
+
 export default router;

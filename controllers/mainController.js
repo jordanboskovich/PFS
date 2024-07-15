@@ -2,6 +2,39 @@
 import User from '../models/User.js';
 import MeetingLog from '../models/MeetingLog.js';
 import Resource from '../models/Resource.js';
+import Note from '../models/Note.js';
+import nodemailer from 'nodemailer';
+
+// Function to add a note
+export const addNote = async (req, res) => {
+  try {
+    const { date, content } = req.body;
+    const mentorId = req.user._id;
+
+    const newNote = new Note({
+      mentor: mentorId,
+      date,
+      content,
+    });
+
+    await newNote.save();
+
+    res.redirect('/mentor/profile');
+  } catch (err) {
+    res.status(500).send('Server Error');
+  }
+};
+
+// Function to view notes
+export const admin_notes = async (req, res) => {
+  try {
+    const notes = await Note.find().populate('mentor');
+    res.render('admin_notes', { notes });
+  } catch (err) {
+    res.status(500).send('Server Error');
+  }
+};
+
 
 export const home = (req, res) => {
   if (req.user) {
@@ -194,5 +227,67 @@ export const mentor_resources = async (req, res) => {
     res.render('mentor_resources', { resources });
   } catch (err) {
     res.status(500).send('Server Error');
+  }
+};
+
+export const sendReminderEmail = async (req, res) => {
+  const { email } = req.body;
+  
+  // Configure the mail transporter
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER, // Your email address
+      pass: process.env.EMAIL_PASS  // Your email password
+    }
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Reminder to Meet with Your Mentee',
+    text: 'This is a reminder to schedule a meeting with your mentee before the end of the month.'
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error sending email:', err);
+    res.json({ success: false, error: err.message });
+  }
+};
+
+
+export const sendBulkReminders = async (req, res) => {
+  // Configure the mail transporter
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER, // Your email address
+      pass: process.env.EMAIL_PASS  // Your app-specific password
+    }
+  });
+
+  try {
+    const mentors = await User.find({ role: 'mentor', timesMetThisMonth: 0 });
+
+    const emailPromises = mentors.map(mentor => {
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: mentor.email,
+        subject: 'Reminder to Meet with Your Mentee',
+        text: 'This is a reminder to schedule a meeting with your mentee.'
+      };
+
+      return transporter.sendMail(mailOptions);
+    });
+
+    await Promise.all(emailPromises);
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error sending bulk emails:', err);
+    res.json({ success: false, error: err.message });
   }
 };
