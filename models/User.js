@@ -21,6 +21,16 @@ const UserSchema = new mongoose.Schema({
   email: String,
   phone: String,
   gender: String,
+  PFSEmail: String,
+  parent1Name: String,
+  parent1Email: String,
+  parent1Cellphone: String,
+  parent2Name: String,
+  parent2Email: String,
+  parent2Cellphone: String,
+  homeAddress: String,
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
   mentee: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -38,6 +48,7 @@ const UserSchema = new mongoose.Schema({
     default: 0,
   }
 });
+
 
 UserSchema.pre('save', async function (next) {
   if (this.isModified('password') || this.isNew) {

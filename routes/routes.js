@@ -40,15 +40,25 @@ router.post('/login', passport.authenticate('local', {
 }));
 router.get('/logout', auth.logout);
 
-// Registration routes
-router.get('/register', auth.register);
-router.post('/register', auth.verifyRegister);
+// forgot password routes
+router.get('/forgot-password', auth.forgotPassword);
+router.post('/forgot-password', auth.handleForgotPassword);
+router.get('/reset-password/:token', auth.resetPassword);
+router.post('/reset-password/:token', auth.handleResetPassword);
+
+// // Registration routes
+// router.get('/register', auth.register);
+// router.post('/register', auth.verifyRegister);
 
 router.post('/mentor/addNote', ctrl.isMentor, ctrl.addNote);
 router.get('/admin/notes', ctrl.isAdmin, ctrl.admin_notes);
 
 router.post('/admin/sendReminder', ctrl.isAdmin, ctrl.sendReminderEmail);
 router.post('/admin/sendBulkReminders', ctrl.isAdmin, ctrl.sendBulkReminders);
+
+router.post('/mentor/updateProfile', ctrl.updateMentorProfile);
+
+router.get('/reset-password-success', ctrl.resetPasswordSuccess);
 
 
 export default router;

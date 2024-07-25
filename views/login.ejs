@@ -35,17 +35,18 @@
             background-color: #B7A4C0;
             border-color: #B7A4C0;
         }
+        .forgot-password {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body class="bg-light">
   <div class="container">
-    <!-- Align the login box to the middle of the page -->
     <div class="row justify-content-center align-items-center vh-100">
       <div class="col-md-6 col-lg-4">
-        <!-- Bootstrap card for login form -->
         <div class="card">
           <div class="card-body">
-            <h1 class="card-title text-center">PFS Login In</h1>
+            <h1 class="card-title text-center">PFS Login</h1>
             <form action="/login" method="POST">
               <div class="form-group">
                 <label for="username">Username:</label>
@@ -57,6 +58,9 @@
               </div>
               <button type="submit" class="btn btn-primary btn-block">Login</button>
             </form>
+            <div class="forgot-password text-center">
+              <a href="/forgot-password" class="btn btn-link">Forgot Password?</a>
+            </div>
           </div>
         </div>
       </div>

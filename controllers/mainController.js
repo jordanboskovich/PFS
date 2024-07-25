@@ -86,11 +86,8 @@ export const admin_pair = async (req, res) => {
   try {
     const mentors = await User.find({ role: 'mentor' }).populate('mentee');
     const mentees = await User.find({ role: 'mentee' }).populate('mentor');
-    console.log('Mentors:', mentors); // Log mentors data for debugging
-    console.log('Mentees:', mentees); // Log mentees data for debugging
     res.render('admin_pair', { mentors, mentees });
   } catch (err) {
-    console.error('Error in admin_pair:', err); // Log the error
     res.status(500).send('Server Error');
   }
 };
@@ -197,24 +194,40 @@ export const unpairStudents = async (req, res) => {
 // Add new mentor or mentee
 export const addUser = async (req, res) => {
   try {
-    const { username, password, role, name, grade, school, phone, email, gender } = req.body;
+    const {
+      username, password, role, name, gender, grade, school, phone,
+      PFSEmail, email, parent1Name, parent1Email, parent1Cellphone,
+      parent2Name, parent2Email, parent2Cellphone, homeAddress
+    } = req.body;
+
     const newUser = new User({
       username,
       password,
       role,
       name,
+      gender,
       grade,
       school,
       phone,
+      PFSEmail,
       email,
-      gender
+      parent1Name,
+      parent1Email,
+      parent1Cellphone,
+      parent2Name,
+      parent2Email,
+      parent2Cellphone,
+      homeAddress
     });
+
     await newUser.save();
     res.redirect('/admin/directory');
   } catch (err) {
     res.status(500).send('Server Error');
   }
 };
+
+
 
 export const getAddUser = (req, res) => {
   res.render('add_user');
@@ -231,8 +244,8 @@ export const mentor_resources = async (req, res) => {
 };
 
 export const sendReminderEmail = async (req, res) => {
-  const { email } = req.body;
-  
+  const { email, PFSEmail } = req.body;
+
   // Configure the mail transporter
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -242,9 +255,15 @@ export const sendReminderEmail = async (req, res) => {
     }
   });
 
+  // Prepare the recipient emails
+  const recipients = [email];
+  if (PFSEmail) {
+    recipients.push(PFSEmail);
+  }
+
   const mailOptions = {
     from: process.env.EMAIL_USER,
-    to: email,
+    to: recipients, // Send to both emails if PFSEmail exists
     subject: 'Reminder to Meet with Your Mentee',
     text: 'This is a reminder to schedule a meeting with your mentee before the end of the month.'
   };
@@ -257,7 +276,6 @@ export const sendReminderEmail = async (req, res) => {
     res.json({ success: false, error: err.message });
   }
 };
-
 
 export const sendBulkReminders = async (req, res) => {
   // Configure the mail transporter
@@ -273,9 +291,15 @@ export const sendBulkReminders = async (req, res) => {
     const mentors = await User.find({ role: 'mentor', timesMetThisMonth: 0 });
 
     const emailPromises = mentors.map(mentor => {
+      // Prepare the recipient emails
+      const recipients = [mentor.email];
+      if (mentor.PFSEmail) {
+        recipients.push(mentor.PFSEmail);
+      }
+
       const mailOptions = {
         from: process.env.EMAIL_USER,
-        to: mentor.email,
+        to: recipients, // Send to both emails if PFSEmail exists
         subject: 'Reminder to Meet with Your Mentee',
         text: 'This is a reminder to schedule a meeting with your mentee.'
       };
@@ -290,4 +314,26 @@ export const sendBulkReminders = async (req, res) => {
     console.error('Error sending bulk emails:', err);
     res.json({ success: false, error: err.message });
   }
+};
+
+export const updateMentorProfile = async (req, res) => {
+  try {
+    const mentorId = req.user._id; // Assuming the mentor's ID is stored in req.user._id
+    const {
+      name, gender, grade, school, phone, email, PFSEmail, parent1Name, parent1Email, parent1Cellphone, parent2Name, parent2Email, parent2Cellphone, homeAddress
+    } = req.body;
+
+    await User.findByIdAndUpdate(mentorId, {
+      name, gender, grade, school, phone, email, PFSEmail, parent1Name, parent1Email, parent1Cellphone, parent2Name, parent2Email, parent2Cellphone, homeAddress
+    });
+
+    res.redirect('/mentor/profile');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+export const resetPasswordSuccess = (req, res) => {
+  res.render('reset-password-success', { title: 'Password Reset Successful' });
 };

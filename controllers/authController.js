@@ -1,8 +1,8 @@
-//question: I want to redirect to mentor or admin based on what their "role" is in the Schema. Do I add that here or should I do something in my routes/ maincontroller, like a "isAdmin" function?
-
 // Importing required modules and dependencies
 import User from '../models/User.js';
 import passport from 'passport';
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
 
 // Controller function to render login page
 export const login = (req, res) => {
@@ -16,22 +16,22 @@ export const verifyLogin = passport.authenticate('local', {
   failureFlash: false 
 });
 
-// Controller function to render register page
-export const register = (req, res) => {
-  res.render('register');
-}
+// // Controller function to render register page
+// export const register = (req, res) => {
+//   res.render('register');
+// }
 
-// Middleware to verify and register a new user
-export const verifyRegister = async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const user = new User({ username, password });
-    await user.save();
-    res.redirect('/login');
-  } catch (error) {
-    res.send(error.message);
-  }
-};
+// // Middleware to verify and register a new user
+// export const verifyRegister = async (req, res) => {
+//   try {
+//     const { username, password } = req.body;
+//     const user = new User({ username, password });
+//     await user.save();
+//     res.redirect('/login');
+//   } catch (error) {
+//     res.send(error.message);
+//   }
+// };
 
 // Controller function to render change password page
 export const changePassword = (req, res) => {
@@ -126,4 +126,91 @@ export const isAdmin = (req, res, next) => {
   }
   // If the user is not an admin, redirect them or show an error
   res.status(403).send('Access denied');
+}
+
+// Controller function to render forgot password page
+export const forgotPassword = (req, res) => {
+  res.render('forgot-password');
+}
+
+// Controller function to handle forgot password request
+export const handleForgotPassword = async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.status(400).send('No account with that email address exists.');
+  }
+
+  // Generate reset token
+  const token = crypto.randomBytes(20).toString('hex');
+  user.resetPasswordToken = token;
+  user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+  await user.save();
+
+  // Send email
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+
+  const mailOptions = {
+    to: user.email,
+    from: process.env.EMAIL_USER,
+    subject: 'PFS Password Reset',
+    text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
+      Please click on the following link, or paste this into your browser to complete the process:\n\n
+      http://${req.headers.host}/reset-password/${token}\n\n
+      If you did not request this, please ignore this email and your password will remain unchanged.\n`
+  };
+
+  transporter.sendMail(mailOptions, (err) => {
+    if (err) {
+      return res.status(500).send('Error sending email');
+    }
+    res.send('An e-mail has been sent to ' + user.email + ' with further instructions.');
+  });
+}
+
+// Controller function to render reset password page
+export const resetPassword = async (req, res) => {
+  const user = await User.findOne({
+    resetPasswordToken: req.params.token,
+    resetPasswordExpires: { $gt: Date.now() }
+  });
+
+  if (!user) {
+    return res.status(400).send('Password reset token is invalid or has expired.');
+  }
+
+  res.render('reset-password', { token: req.params.token, error: null });
+}
+
+// Controller function to handle reset password request
+export const handleResetPassword = async (req, res) => {
+  const { password, confirmPassword } = req.body;
+  const user = await User.findOne({
+    resetPasswordToken: req.params.token,
+    resetPasswordExpires: { $gt: Date.now() }
+  });
+
+  if (!user) {
+    return res.status(400).send('Password reset token is invalid or has expired.');
+  }
+
+  if (password !== confirmPassword) {
+    return res.render('reset-password', { token: req.params.token, error: 'Passwords do not match.' });
+  }
+
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+
+  await user.save();
+
+  res.redirect('/reset-password-success');
 }

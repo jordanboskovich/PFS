@@ -5,37 +5,29 @@
   <title>Admin Directory</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
     body { 
       background-color: #f5f5f5; 
       font-family: 'Montserrat', sans-serif;
     }
     .nav-tabs { margin-bottom: 20px; }
     .highlight {
-  background-color: #fff3cd !important; /* Yellow warning color */
-}
-    
+      background-color: #fff3cd !important; /* Yellow warning color */
+    }
     .btn-primary{
       background-color: #CBBBE7;
       border-color: #CBBBE7;
     }
-    
-
-        /* CSS to change the color of mentor and mentee tabs */
     #directoryTab .nav-link#mentors-tab {
       color: #85628D;
     }
-
     #directoryTab .nav-link#mentees-tab {
       color: #85628D;
     }
-    
     .btn-primary:hover {
       background-color: #85628D;
       border-color: #85628D;
     }
-
-
   </style>
 </head>
 <body>
@@ -58,36 +50,66 @@
         <h3>Mentors</h3>
         <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addMentorModal">Add Mentor</button>
         <button class="btn btn-warning mb-3" id="resetMeetingsButton">Reset Meetings For New Month</button>
-        <button class="btn btn-danger mb-3" id="sendBulkRemindersButton">Send Reminder to All</button> <!-- New Button -->
+        <button class="btn btn-danger mb-3" id="sendBulkRemindersButton">Send Reminder to All</button>
         <table class="table">
           <thead>
             <tr>
+              <th>Details</th>
               <th>Name</th>
               <th>Grade</th>
               <th>School</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Gender</th>
               <th>Mentee</th>
               <th>Times Met This Month</th>
-              <th>Action</th> <!-- New Column for Individual Reminder Button -->
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             <% mentors.forEach(function(mentor) { %>
               <tr class="<%= mentor.timesMetThisMonth === 0 ? 'highlight' : '' %>">
+                <td>
+                  <button class="btn btn-primary" data-toggle="modal" data-target="#mentorDetailsModal<%= mentor._id %>">View Details</button>
+                </td>
                 <td><%= mentor.name %></td>
                 <td><%= mentor.grade %></td>
                 <td><%= mentor.school %></td>
-                <td><%= mentor.email %></td>
-                <td><%= mentor.phone %></td>
-                <td><%= mentor.gender %></td>
                 <td><%= mentor.mentee ? mentor.mentee.name : 'None' %></td>
                 <td><%= mentor.timesMetThisMonth %></td>
                 <td>
                   <button class="btn btn-secondary sendReminderButton" data-email="<%= mentor.email %>">Send Reminder</button>
-                </td> <!-- New Button for Individual Reminder -->
+                </td>
               </tr>
+
+              <!-- Mentor Details Modal -->
+              <div class="modal fade" id="mentorDetailsModal<%= mentor._id %>" tabindex="-1" aria-labelledby="mentorDetailsModalLabel<%= mentor._id %>" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="mentorDetailsModalLabel<%= mentor._id %>">Mentor Details</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <p><strong>Name:</strong> <%= mentor.name %></p>
+                      <p><strong>Gender:</strong> <%= mentor.gender %></p>
+                      <p><strong>Grade:</strong> <%= mentor.grade %></p>
+                      <p><strong>School:</strong> <%= mentor.school %></p>
+                      <p><strong>Email:</strong> <%= mentor.email %></p>
+                      <p><strong>Phone:</strong> <%= mentor.phone %></p>
+                      <p><strong>PFS Email:</strong> <%= mentor.PFSEmail %></p>
+                      <p><strong>Parent 1 Name:</strong> <%= mentor.parent1Name %></p>
+                      <p><strong>Parent 1 Email:</strong> <%= mentor.parent1Email %></p>
+                      <p><strong>Parent 1 Cellphone:</strong> <%= mentor.parent1Cellphone %></p>
+                      <p><strong>Parent 2 Name:</strong> <%= mentor.parent2Name %></p>
+                      <p><strong>Parent 2 Email:</strong> <%= mentor.parent2Email %></p>
+                      <p><strong>Parent 2 Cellphone:</strong> <%= mentor.parent2Cellphone %></p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             <% }) %>
           </tbody>
         </table>
@@ -100,26 +122,55 @@
         <table class="table">
           <thead>
             <tr>
+              <th>Details</th>
               <th>Name</th>
               <th>Grade</th>
               <th>School</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Gender</th>
               <th>Mentor</th>
             </tr>
           </thead>
           <tbody>
             <% mentees.forEach(function(mentee) { %>
               <tr>
+                <td>
+                  <button class="btn btn-primary" data-toggle="modal" data-target="#menteeDetailsModal<%= mentee._id %>">View Details</button>
+                </td>
                 <td><%= mentee.name %></td>
                 <td><%= mentee.grade %></td>
                 <td><%= mentee.school %></td>
-                <td><%= mentee.email %></td>
-                <td><%= mentee.phone %></td>
-                <td><%= mentee.gender %></td>
                 <td><%= mentee.mentor ? mentee.mentor.name : 'None' %></td>
               </tr>
+
+              <!-- Mentee Details Modal -->
+              <div class="modal fade" id="menteeDetailsModal<%= mentee._id %>" tabindex="-1" aria-labelledby="menteeDetailsModalLabel<%= mentee._id %>" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="menteeDetailsModalLabel<%= mentee._id %>">Mentee Details</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <p><strong>Name:</strong> <%= mentee.name %></p>
+                      <p><strong>Gender:</strong> <%= mentee.gender %></p>
+                      <p><strong>Grade:</strong> <%= mentee.grade %></p>
+                      <p><strong>School:</strong> <%= mentee.school %></p>
+                      <p><strong>PFS Email:</strong> <%= mentee.PFSEmail %></p>
+                      <p><strong>Parent 1 Name:</strong> <%= mentee.parent1Name %></p>
+                      <p><strong>Parent 1 Email:</strong> <%= mentee.parent1Email %></p>
+                      <p><strong>Parent 1 Cellphone:</strong> <%= mentee.parent1Cellphone %></p>
+                      <p><strong>Parent 2 Name:</strong> <%= mentee.parent2Name %></p>
+                      <p><strong>Parent 2 Email:</strong> <%= mentee.parent2Email %></p>
+                      <p><strong>Parent 2 Cellphone:</strong> <%= mentee.parent2Cellphone %></p>
+                      <p><strong>Home Address:</strong> <%= mentee.homeAddress %></p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             <% }) %>
           </tbody>
         </table>
@@ -153,28 +204,56 @@
               <input type="text" class="form-control" id="name" name="name" required>
             </div>
             <div class="form-group">
-              <label for="grade">Grade</label>
-              <input type="number" class="form-control" id="grade" name="grade" required>
-            </div>
-            <div class="form-group">
-              <label for="school">School</label>
-              <input type="text" class="form-control" id="school" name="school" required>
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-              <label for="phone">Phone</label>
-              <input type="text" class="form-control" id="phone" name="phone" required>
-            </div>
-            <div class="form-group">
               <label for="gender">Gender</label>
-              <select class="form-control" id="gender" name="gender" required>
+              <select class="form-control" id="gender" name="gender">
                 <option value="male">Male</option>
                 <option value="female">Female</option>
                 <option value="other">Other</option>
               </select>
+            </div>
+            <div class="form-group">
+              <label for="grade">Grade</label>
+              <input type="number" class="form-control" id="grade" name="grade">
+            </div>
+            <div class="form-group">
+              <label for="school">School</label>
+              <input type="text" class="form-control" id="school" name="school">
+            </div>
+            <div class="form-group">
+              <label for="phone">Cellphone</label>
+              <input type="text" class="form-control" id="phone" name="phone">
+            </div>
+            <div class="form-group">
+              <label for="PFSEmail">PFS Email</label>
+              <input type="email" class="form-control" id="PFSEmail" name="PFSEmail">
+            </div>
+            <div class="form-group">
+              <label for="email">School / Personal Email</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="parent1Name">Parent 1 Name</label>
+              <input type="text" class="form-control" id="parent1Name" name="parent1Name">
+            </div>
+            <div class="form-group">
+              <label for="parent1Email">Parent 1 Email</label>
+              <input type="email" class="form-control" id="parent1Email" name="parent1Email">
+            </div>
+            <div class="form-group">
+              <label for="parent1Cellphone">Parent 1 Cellphone</label>
+              <input type="text" class="form-control" id="parent1Cellphone" name="parent1Cellphone">
+            </div>
+            <div class="form-group">
+              <label for="parent2Name">Parent 2 Name</label>
+              <input type="text" class="form-control" id="parent2Name" name="parent2Name">
+            </div>
+            <div class="form-group">
+              <label for="parent2Email">Parent 2 Email</label>
+              <input type="email" class="form-control" id="parent2Email" name="parent2Email">
+            </div>
+            <div class="form-group">
+              <label for="parent2Cellphone">Parent 2 Cellphone</label>
+              <input type="text" class="form-control" id="parent2Cellphone" name="parent2Cellphone">
             </div>
           </div>
           <div class="modal-footer">
@@ -200,40 +279,56 @@
           <div class="modal-body">
             <input type="hidden" name="role" value="mentee">
             <div class="form-group">
-              <label for="username">Username</label>
-              <input type="text" class="form-control" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-            <div class="form-group">
               <label for="name">Name</label>
               <input type="text" class="form-control" id="name" name="name" required>
             </div>
             <div class="form-group">
-              <label for="grade">Grade</label>
-              <input type="number" class="form-control" id="grade" name="grade" required>
-            </div>
-            <div class="form-group">
-              <label for="school">School</label>
-              <input type="text" class="form-control" id="school" name="school" required>
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-              <label for="phone">Phone</label>
-              <input type="text" class="form-control" id="phone" name="phone" required>
-            </div>
-            <div class="form-group">
               <label for="gender">Gender</label>
-              <select class="form-control" id="gender" name="gender" required>
+              <select class="form-control" id="gender" name="gender">
                 <option value="male">Male</option>
                 <option value="female">Female</option>
                 <option value="other">Other</option>
               </select>
+            </div>
+            <div class="form-group">
+              <label for="grade">Grade</label>
+              <input type="number" class="form-control" id="grade" name="grade">
+            </div>
+            <div class="form-group">
+              <label for="school">School</label>
+              <input type="text" class="form-control" id="school" name="school">
+            </div>
+            <div class="form-group">
+              <label for="PFSEmail">PFS Email</label>
+              <input type="email" class="form-control" id="PFSEmail" name="PFSEmail">
+            </div>
+            <div class="form-group">
+              <label for="parent1Name">Parent 1 Name</label>
+              <input type="text" class="form-control" id="parent1Name" name="parent1Name">
+            </div>
+            <div class="form-group">
+              <label for="parent1Email">Parent 1 Email</label>
+              <input type="email" class="form-control" id="parent1Email" name="parent1Email">
+            </div>
+            <div class="form-group">
+              <label for="parent1Cellphone">Parent 1 Cellphone</label>
+              <input type="text" class="form-control" id="parent1Cellphone" name="parent1Cellphone">
+            </div>
+            <div class="form-group">
+              <label for="parent2Name">Parent 2 Name</label>
+              <input type="text" class="form-control" id="parent2Name" name="parent2Name">
+            </div>
+            <div class="form-group">
+              <label for="parent2Email">Parent 2 Email</label>
+              <input type="email" class="form-control" id="parent2Email" name="parent2Email">
+            </div>
+            <div class="form-group">
+              <label for="parent2Cellphone">Parent 2 Cellphone</label>
+              <input type="text" class="form-control" id="parent2Cellphone" name="parent2Cellphone">
+            </div>
+            <div class="form-group">
+              <label for="homeAddress">Home Address</label>
+              <input type="text" class="form-control" id="homeAddress" name="homeAddress">
             </div>
           </div>
           <div class="modal-footer">

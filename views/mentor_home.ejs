@@ -132,7 +132,20 @@ p {
         padding: 5px;
       }
   }
-    
+  .btn-primary{
+      background-color: #9FD8B1;
+      border-color: #9FD8B1;
+    }
+    .btn-primary:hover {
+      background-color: #629C75;
+      border-color: #629C75;
+    }
+    .logoutBtn{
+      position: absolute;
+      right: 25px; 
+      top: 25px; 
+      z-index: 2; 
+    }  
     
     
 
@@ -143,6 +156,9 @@ p {
     <div class="container d-flex align-items-center justify-content-between">
       <img id="pfsPic" src="/images/logo.png" alt="PFS Logo" class="rounded-circle">
       <h1 id="pfsHeader">Partnership For Success</h1>
+      <form action="/logout" method="get" style="display: inline;">
+        <button type="submit" class="btn btn-primary logoutBtn">Logout</button>
+      </form>
       <div></div>
     </div>
   </div>

@@ -9,10 +9,12 @@
 
   #pfsHeader {
     font-family: 'Ubuntu', sans-serif;
-    font-size: 5.3vw; /* Adjusted for scalability */
-    margin-left: 19vw;
-    margin-right: -1vw;
-    margin-top: 50px;
+    font-size: 5.3vw;
+    text-align: center;
+    margin: 50px auto 0;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
   }
   #pfsPic {
     position: absolute;
@@ -94,7 +96,6 @@
       padding: 10px; /* Adjust padding for smaller screens */
     }
     #pfsHeader {
-      margin-left: 0;
       font-size: 8vw; /* Adjusted for readability on smaller screens */
     }
   }
@@ -103,6 +104,20 @@
       font-size: 4vw; /* Adjusted for smaller screens */
     }
   }
+  .btn-primary{
+      background-color: #CBBBE7;
+      border-color: #CBBBE7;
+    }
+    .btn-primary:hover {
+      background-color: #85628D;
+      border-color: #85628D;
+    }
+    .logoutBtn{
+      position: absolute;
+      right: 25px; 
+      top: 25px; 
+      z-index: 2; 
+    }
 </style>
 
 </head>
@@ -111,6 +126,10 @@
     <div class="container d-flex align-items-center justify-content-between">
       <img id="pfsPic" src="/images/logo.png" alt="PFS Logo" class="rounded-circle">
       <h1 id="pfsHeader">PFS Admin</h1>
+      <form action="/logout" method="get" style="display: inline;">
+        <button type="submit" class="btn btn-primary logoutBtn">Logout</button>
+      </form>
+      
       <div></div>
     </div>
   </div>
@@ -128,7 +147,7 @@
       <a href="/admin/directory" class="text-decoration-none text-dark w-100">
         <div class="content-box d-flex flex-column justify-content-center align-items-center h-100">
           <h3 class="text-center linkBoxText">Directory</h3><br>
-          <p class="text-center linkBoxP">View all student information and pairings...</p>
+          <p class="text-center linkBoxP">View full list of mentors and mentees, send reminders to meet, and add mentors or mentees</p>
         </div>
       </a>
     </div>
@@ -137,7 +156,7 @@
       <a href="/admin/pair" class="text-decoration-none text-dark w-100">
         <div class="content-box d-flex flex-column justify-content-center align-items-center h-100">
           <h3 class="text-center linkBoxText">Pair Students</h3><br>
-          <p class="text-center linkBoxP">Pair students with their mentors / mentees.</p>
+          <p class="text-center linkBoxP">Make mentor-mentee pairings</p>
         </div>
       </a>
     </div>
@@ -146,7 +165,7 @@
       <a href="/admin/resources" class="text-decoration-none text-dark w-100">
         <div class="content-box d-flex flex-column justify-content-center align-items-center h-100">
           <h3 class="text-center linkBoxText">Edit Resources</h3><br>
-          <p class="text-center linkBoxP">View mentor resources. Add/ delete resources</p>
+          <p class="text-center linkBoxP">View and edit mentor resource page</p>
         </div>
       </a>
     </div>
@@ -155,7 +174,7 @@
       <a href="/admin/notes" class="text-decoration-none text-dark w-100">
         <div class="content-box d-flex flex-column justify-content-center align-items-center h-100">
           <h3 class="text-center linkBoxText">Meeting Notes</h3><br>
-          <p class="text-center linkBoxP">View mentors' notes about their meetings.</p>
+          <p class="text-center linkBoxP">View mentors' notes about their meetings</p>
         </div>
       </a>
     </div>
