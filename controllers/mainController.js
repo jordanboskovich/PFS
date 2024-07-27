@@ -4,6 +4,8 @@ import MeetingLog from '../models/MeetingLog.js';
 import Resource from '../models/Resource.js';
 import Note from '../models/Note.js';
 import nodemailer from 'nodemailer';
+import multer from 'multer';
+import xlsx from 'xlsx';
 
 // Function to add a note
 export const addNote = async (req, res) => {
@@ -34,7 +36,6 @@ export const admin_notes = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
-
 
 export const home = (req, res) => {
   if (req.user) {
@@ -81,7 +82,6 @@ export const admin_directory = async (req, res) => {
   }
 };
 
-
 export const admin_pair = async (req, res) => {
   try {
     const mentors = await User.find({ role: 'mentor' }).populate('mentee');
@@ -92,7 +92,6 @@ export const admin_pair = async (req, res) => {
   }
 };
 
-
 export const mentor_home = async (req, res) => {
   try {
     const mentor = await User.findById(req.user._id);
@@ -101,7 +100,6 @@ export const mentor_home = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
-
 
 export const mentor_profile = async (req, res) => {
   try {
@@ -173,7 +171,7 @@ export const unpairStudents = async (req, res) => {
     const mentor = await User.findById(mentorId);
     const mentee = await User.findById(menteeId);
 
-    if (mentor && mentee && mentor.mentee.toString() === menteeId && mentee.mentor.toString() === mentorId) {
+    if (mentor && mentee && mentor.mentee && mentor.mentee.toString() === menteeId && mentee.mentor && mentee.mentor.toString() === mentorId) {
       mentor.mentee = null;
       mentee.mentor = null;
 
@@ -189,8 +187,6 @@ export const unpairStudents = async (req, res) => {
   }
 };
 
-
-
 // Add new mentor or mentee
 export const addUser = async (req, res) => {
   try {
@@ -201,8 +197,8 @@ export const addUser = async (req, res) => {
     } = req.body;
 
     const newUser = new User({
-      username,
-      password,
+      username: role === 'mentee' ? undefined : username,
+      password: role === 'mentee' ? undefined : password,
       role,
       name,
       gender,
@@ -227,12 +223,9 @@ export const addUser = async (req, res) => {
   }
 };
 
-
-
 export const getAddUser = (req, res) => {
   res.render('add_user');
 };
-
 
 export const mentor_resources = async (req, res) => {
   try {
@@ -336,4 +329,100 @@ export const updateMentorProfile = async (req, res) => {
 
 export const resetPasswordSuccess = (req, res) => {
   res.render('reset-password-success', { title: 'Password Reset Successful' });
+};
+
+
+const upload = multer({ dest: 'uploads/' });
+
+export const uploadMentors = async (req, res) => {
+  try {
+    const file = req.file;
+    const workbook = xlsx.readFile(file.path);
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const mentorData = xlsx.utils.sheet_to_json(sheet);
+
+    for (const row of mentorData) {
+      let username = `${row['First Name'].toLowerCase()}_${row['Last Name'].toLowerCase()}`;
+      let existingUser = await User.findOne({ username });
+      let counter = 1;
+      
+      while (existingUser) {
+        username = `${row['First Name'].toLowerCase()}_${row['Last Name'].toLowerCase()}_${counter}`;
+        existingUser = await User.findOne({ username });
+        counter++;
+      }
+
+      const newMentor = new User({
+        username,
+        password: row['Password'],
+        role: 'mentor',
+        name: `${row['First Name']} ${row['Last Name']}`,
+        gender: row['Gender'],
+        grade: row['Grade'],
+        school: row['School'],
+        phone: row['Phone'],
+        PFSEmail: row['PFS Email'],
+        email: row['Other Email'],
+        parent1Name: row['Par.1 Name'],
+        parent1Email: row['Par.1 Email'],
+        parent1Cellphone: row['Par.1 Phone'],
+        parent2Name: row['Par.2 Name'],
+        parent2Email: row['Par.2 Email'],
+        parent2Cellphone: row['Par. Phone']
+      });
+
+      await newMentor.save();
+    }
+
+    res.redirect('/admin/directory');
+  } catch (err) {
+    res.status(500).send('Server Error');
+  }
+};
+
+export const uploadMentees = async (req, res) => {
+  try {
+    console.log('Mentee upload started');
+    const file = req.file;
+    console.log('File uploaded:', file);
+
+    const workbook = xlsx.readFile(file.path);
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const menteeData = xlsx.utils.sheet_to_json(sheet);
+    console.log('Mentee data:', menteeData);
+
+    // generates a random username for mentees because the database isn't allowing the creation of users without one
+    for (const row of menteeData) {
+      const randomString = Math.random().toString(36).substring(2, 10);
+      const username = `${row['First Name'].toLowerCase()}_${row['Last Name'].toLowerCase()}_${randomString}`;
+
+      const newMentee = new User({
+        username: username,
+        role: 'mentee',
+        name: `${row['First Name']} ${row['Last Name']}`,
+        gender: row['Gender'],
+        grade: row['Grade'],
+        school: row['School'],
+        PFSEmail: row['PFS Email'],
+        email: row['Other Email'],
+        parent1Name: row['Par.1 Name'],
+        parent1Email: row['Par.1 Email'],
+        parent1Cellphone: row['Par.1 Phone'],
+        parent2Name: row['Par.2 Name'],
+        parent2Email: row['Par.2 Email'],
+        parent2Cellphone: row['Par. Phone'],
+        homeAddress: row['Address']
+      });
+
+      await newMentee.save();
+    }
+
+    console.log('Mentees successfully uploaded');
+    res.redirect('/admin/directory');
+  } catch (err) {
+    console.error('Error uploading mentees:', err);
+    res.status(500).send('Server Error');
+  }
 };

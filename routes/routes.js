@@ -3,8 +3,10 @@ import passport from 'passport';
 import * as ctrl from '../controllers/mainController.js';
 import * as auth from '../controllers/authController.js';
 import * as resourceCtrl from '../controllers/resourceController.js';
+import multer from 'multer';
 
 const router = express.Router();
+const upload = multer({ dest: 'uploads/' });
 
 // Home page route
 router.get('/', ctrl.home);
@@ -60,5 +62,7 @@ router.post('/mentor/updateProfile', ctrl.updateMentorProfile);
 
 router.get('/reset-password-success', ctrl.resetPasswordSuccess);
 
+router.post('/admin/uploadMentors', upload.single('mentorFile'), ctrl.uploadMentors);
+router.post('/admin/uploadMentees', upload.single('menteeFile'), ctrl.uploadMentees);
 
 export default router;

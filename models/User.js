@@ -4,12 +4,11 @@ import bcrypt from 'bcrypt';
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: true,
     unique: true,
+    sparse: true, // Allows null and unique combination
   },
   password: {
     type: String,
-    required: true,
   },
   role: {
     type: String,
@@ -49,15 +48,19 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-
 UserSchema.pre('save', async function (next) {
   if (this.isModified('password') || this.isNew) {
-    this.password = await bcrypt.hash(this.password, 10);
+    if (this.password) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
   }
   next();
 });
 
 UserSchema.methods.comparePassword = function (password, callback) {
+  if (!this.password) {
+    return callback(null, false);
+  }
   bcrypt.compare(password, this.password, (err, isMatch) => {
     if (err) return callback(err);
     callback(null, isMatch);

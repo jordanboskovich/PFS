@@ -48,9 +48,22 @@
     <div class="tab-content" id="directoryTabContent">
       <div class="tab-pane fade show active" id="mentors" role="tabpanel" aria-labelledby="mentors-tab">
         <h3>Mentors</h3>
-        <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addMentorModal">Add Mentor</button>
-        <button class="btn btn-warning mb-3" id="resetMeetingsButton">Reset Meetings For New Month</button>
-        <button class="btn btn-danger mb-3" id="sendBulkRemindersButton">Send Reminder to All</button>
+        <div class="mb-3">
+          <button class="btn btn-primary" data-toggle="modal" data-target="#addMentorModal">Add Mentor</button>
+          <form action="/admin/uploadMentors" method="post" enctype="multipart/form-data" class="d-inline-block mr-2">
+            <div class="input-group input-group-sm">
+              <div class="custom-file custom-file-sm">
+                <input type="file" class="custom-file-input" id="mentorFile" name="mentorFile" accept=".xlsx, .xls" required>
+                <label class="custom-file-label" for="mentorFile">Choose Excel File</label>
+              </div>
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">Upload</button>
+              </div>
+            </div>
+          </form>          
+          <button class="btn btn-secondary" id="resetMeetingsButton">Reset Meetings For New Month</button>
+          <button class="btn btn-secondary" id="sendBulkRemindersButton">Send Reminder to All</button>
+        </div>
         <table class="table">
           <thead>
             <tr>
@@ -90,6 +103,7 @@
                       </button>
                     </div>
                     <div class="modal-body">
+                      <p><strong>Username:</strong> <%= mentor.username %></p>
                       <p><strong>Name:</strong> <%= mentor.name %></p>
                       <p><strong>Gender:</strong> <%= mentor.gender %></p>
                       <p><strong>Grade:</strong> <%= mentor.grade %></p>
@@ -118,7 +132,20 @@
 
       <div class="tab-pane fade" id="mentees" role="tabpanel" aria-labelledby="mentees-tab">
         <h3>Mentees</h3>
-        <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addMenteeModal">Add Mentee</button>
+        <div class="mb-3">
+          <button class="btn btn-primary" data-toggle="modal" data-target="#addMenteeModal">Add Mentee</button>
+          <form action="/admin/uploadMentees" method="post" enctype="multipart/form-data" class="d-inline-block">
+            <div class="input-group input-group-sm">
+              <div class="custom-file custom-file-sm">
+                <input type="file" class="custom-file-input" id="menteeFile" name="menteeFile" accept=".xlsx, .xls" required>
+                <label class="custom-file-label" for="menteeFile">Choose Excel File</label>
+              </div>
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">Upload</button>
+              </div>
+            </div>
+          </form>
+        </div>
         <table class="table">
           <thead>
             <tr>
@@ -399,6 +426,16 @@
         });
       });
     });
+
+    document.querySelectorAll('.custom-file-input').forEach(input => {
+      input.addEventListener('change', (e) => {
+        let fileName = e.target.files[0].name;
+        let nextSibling = e.target.nextElementSibling;
+        nextSibling.innerText = fileName;
+      });
+    });
+
+    
   </script>
   
 </body>
