@@ -65,4 +65,7 @@ router.get('/reset-password-success', ctrl.resetPasswordSuccess);
 router.post('/admin/uploadMentors', upload.single('mentorFile'), ctrl.uploadMentors);
 router.post('/admin/uploadMentees', upload.single('menteeFile'), ctrl.uploadMentees);
 
+router.get('/admin/exportMentors', ctrl.isAdmin, ctrl.exportMentors);
+router.get('/admin/exportMentees', ctrl.isAdmin, ctrl.exportMentees);
+
 export default router;

@@ -6,6 +6,7 @@ import Note from '../models/Note.js';
 import nodemailer from 'nodemailer';
 import multer from 'multer';
 import xlsx from 'xlsx';
+import { Parser } from 'json2csv';
 
 // Function to add a note
 export const addNote = async (req, res) => {
@@ -423,6 +424,58 @@ export const uploadMentees = async (req, res) => {
     res.redirect('/admin/directory');
   } catch (err) {
     console.error('Error uploading mentees:', err);
+    res.status(500).send('Server Error');
+  }
+};
+
+export const exportMentors = async (req, res) => {
+  try {
+    const { grade, school, gender } = req.query;
+    const query = { role: 'mentor' };
+
+    if (grade) query.grade = grade;
+    if (school) query.school = school;
+    if (gender) query.gender = gender;
+
+    const mentors = await User.find(query).populate('mentee').lean();
+
+    const fields = ['name', 'gender', 'grade', 'school', 'phone', 'PFSEmail', 'email', 'parent1Name', 'parent1Email', 'parent1Cellphone', 'parent2Name', 'parent2Email', 'parent2Cellphone'];
+    const opts = { fields };
+
+    const parser = new Parser(opts);
+    const csv = parser.parse(mentors);
+
+    res.header('Content-Type', 'text/csv');
+    res.attachment('mentors.csv');
+    res.send(csv);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+};
+
+export const exportMentees = async (req, res) => {
+  try {
+    const { grade, school, gender } = req.query;
+    const query = { role: 'mentee' };
+
+    if (grade) query.grade = grade;
+    if (school) query.school = school;
+    if (gender) query.gender = gender;
+
+    const mentees = await User.find(query).populate('mentor').lean();
+
+    const fields = ['name', 'gender', 'grade', 'school', 'PFSEmail', 'email', 'parent1Name', 'parent1Email', 'parent1Cellphone', 'parent2Name', 'parent2Email', 'parent2Cellphone', 'homeAddress'];
+    const opts = { fields };
+
+    const parser = new Parser(opts);
+    const csv = parser.parse(mentees);
+
+    res.header('Content-Type', 'text/csv');
+    res.attachment('mentees.csv');
+    res.send(csv);
+  } catch (err) {
+    console.error(err);
     res.status(500).send('Server Error');
   }
 };

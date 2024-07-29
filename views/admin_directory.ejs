@@ -47,7 +47,30 @@
 
     <div class="tab-content" id="directoryTabContent">
       <div class="tab-pane fade show active" id="mentors" role="tabpanel" aria-labelledby="mentors-tab">
-        <h3>Mentors</h3>
+        <h3>
+          Mentors
+          <button id="exportMentorsButton" class="btn btn-sm btn-outline-secondary">Export CSV</button>
+          <button id="toggleMentorFilters" class="btn btn-sm btn-outline-secondary">Toggle Filters</button>
+        </h3>
+        <div id="mentorFilters" class="collapse form-row">
+          <div class="col">
+            <input type="text" id="mentorGradeFilter" class="form-control" placeholder="Grade">
+          </div>
+          <div class="col">
+            <input type="text" id="mentorSchoolFilter" class="form-control" placeholder="School">
+          </div>
+          <div class="col">
+            <select id="mentorGenderFilter" class="form-control">
+              <option value="">Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="col">
+            <button id="exportFilteredMentorsButton" class="btn btn-primary">Export Filtered CSV</button>
+          </div>
+        </div>
         <div class="mb-3">
           <button class="btn btn-primary" data-toggle="modal" data-target="#addMentorModal">Add Mentor</button>
           <form action="/admin/uploadMentors" method="post" enctype="multipart/form-data" class="d-inline-block mr-2">
@@ -131,7 +154,30 @@
     
 
       <div class="tab-pane fade" id="mentees" role="tabpanel" aria-labelledby="mentees-tab">
-        <h3>Mentees</h3>
+        <h3>
+          Mentees
+          <button id="exportMenteesButton" class="btn btn-sm btn-outline-secondary">Export CSV</button>
+          <button id="toggleMenteeFilters" class="btn btn-sm btn-outline-secondary">Toggle Filters</button>
+        </h3>
+        <div id="menteeFilters" class="collapse form-row">
+          <div class="col">
+            <input type="text" id="menteeGradeFilter" class="form-control" placeholder="Grade">
+          </div>
+          <div class="col">
+            <input type="text" id="menteeSchoolFilter" class="form-control" placeholder="School">
+          </div>
+          <div class="col">
+            <select id="menteeGenderFilter" class="form-control">
+              <option value="">Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="col">
+            <button id="exportFilteredMenteesButton" class="btn btn-primary">Export Filtered CSV</button>
+          </div>
+        </div>
         <div class="mb-3">
           <button class="btn btn-primary" data-toggle="modal" data-target="#addMenteeModal">Add Mentee</button>
           <form action="/admin/uploadMentees" method="post" enctype="multipart/form-data" class="d-inline-block">
@@ -435,6 +481,37 @@
       });
     });
 
+    document.getElementById('toggleMentorFilters').addEventListener('click', function() {
+      $('#mentorFilters').collapse('toggle');
+    });
+
+    document.getElementById('toggleMenteeFilters').addEventListener('click', function() {
+      $('#menteeFilters').collapse('toggle');
+    });
+
+    document.getElementById('exportMentorsButton').addEventListener('click', function() {
+      window.location.href = '/admin/exportMentors';
+    });
+
+    document.getElementById('exportMenteesButton').addEventListener('click', function() {
+      window.location.href = '/admin/exportMentees';
+    });
+
+    document.getElementById('exportFilteredMentorsButton').addEventListener('click', function() {
+      const grade = document.getElementById('mentorGradeFilter').value;
+      const school = document.getElementById('mentorSchoolFilter').value;
+      const gender = document.getElementById('mentorGenderFilter').value;
+      const url = `/admin/exportMentors?grade=${encodeURIComponent(grade)}&school=${encodeURIComponent(school)}&gender=${encodeURIComponent(gender)}`;
+      window.location.href = url;
+    });
+
+    document.getElementById('exportFilteredMenteesButton').addEventListener('click', function() {
+      const grade = document.getElementById('menteeGradeFilter').value;
+      const school = document.getElementById('menteeSchoolFilter').value;
+      const gender = document.getElementById('menteeGenderFilter').value;
+      const url = `/admin/exportMentees?grade=${encodeURIComponent(grade)}&school=${encodeURIComponent(school)}&gender=${encodeURIComponent(gender)}`;
+      window.location.href = url;
+    });
     
   </script>
   
