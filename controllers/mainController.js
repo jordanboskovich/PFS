@@ -7,6 +7,7 @@ import nodemailer from 'nodemailer';
 import multer from 'multer';
 import xlsx from 'xlsx';
 import { Parser } from 'json2csv';
+import History from '../models/History.js';
 
 // Function to add a note
 export const addNote = async (req, res) => {
@@ -214,7 +215,8 @@ export const addUser = async (req, res) => {
       parent2Name,
       parent2Email,
       parent2Cellphone,
-      homeAddress
+      homeAddress,
+      dateStarted: new Date()
     });
 
     await newUser.save();
@@ -476,6 +478,76 @@ export const exportMentees = async (req, res) => {
     res.send(csv);
   } catch (err) {
     console.error(err);
+    res.status(500).send('Server Error');
+  }
+};
+
+export const admin_history = async (req, res) => {
+  try {
+    const currentMentors = await User.find({ role: 'mentor' }).sort({ dateStarted: -1 });
+    const currentMentees = await User.find({ role: 'mentee' }).sort({ dateStarted: -1 });
+    const pastUsers = await History.find().sort({ dateStarted: -1 });
+
+    const pastMentors = pastUsers.filter(user => user.role === 'mentor');
+    const pastMentees = pastUsers.filter(user => user.role === 'mentee');
+
+    res.render('admin_history', { currentMentors, currentMentees, pastMentors, pastMentees });
+  } catch (err) {
+    console.error("Error fetching history data: ", err);
+    res.status(500).send('Server Error');
+  }
+};
+
+// Function to delete a mentor
+export const delete_mentor = async (req, res) => {
+  try {
+    const mentor = await User.findById(req.params.id);
+    if (!mentor) {
+      return res.status(404).json({ success: false, message: 'Mentor not found' });
+    }
+
+    // Save to history before deleting
+    const historyEntry = new History({
+      name: mentor.name,
+      email: mentor.email,
+      role: mentor.role,
+      dateStarted: mentor.dateStarted,
+      dateEnded: new Date()
+    });
+
+    await historyEntry.save();
+    await User.findByIdAndDelete(req.params.id);
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error deleting mentor: ", err);
+    res.status(500).send('Server Error');
+  }
+};
+
+// Function to delete a mentee
+export const delete_mentee = async (req, res) => {
+  try {
+    const mentee = await User.findById(req.params.id);
+    if (!mentee) {
+      return res.status(404).json({ success: false, message: 'Mentee not found' });
+    }
+
+    // Save to history before deleting
+    const historyEntry = new History({
+      name: mentee.name,
+      email: mentee.email,
+      role: mentee.role,
+      dateStarted: mentee.dateStarted,
+      dateEnded: new Date()
+    });
+
+    await historyEntry.save();
+    await User.findByIdAndDelete(req.params.id);
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error deleting mentee: ", err);
     res.status(500).send('Server Error');
   }
 };

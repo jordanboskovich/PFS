@@ -45,8 +45,13 @@ const UserSchema = new mongoose.Schema({
   timesMetThisMonth: {
     type: Number,
     default: 0,
-  }
-});
+  },
+  dateStarted: {
+    type: Date,
+    default: Date.now
+  },
+    dateEnded: Date,
+  });
 
 UserSchema.pre('save', async function (next) {
   if (this.isModified('password') || this.isNew) {

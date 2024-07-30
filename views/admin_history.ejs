@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Full History of Mentors and Mentees</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+    body { 
+      background-color: #f5f5f5; 
+      font-family: 'Montserrat', sans-serif;
+    }
+    .nav-tabs { margin-bottom: 20px; }
+    .highlight {
+      background-color: #fff3cd !important; /* Yellow warning color */
+    }
+    .btn-primary{
+      background-color: #CBBBE7;
+      border-color: #CBBBE7;
+    }
+    .btn-primary:hover {
+      background-color: #85628D;
+      border-color: #85628D;
+    }
+    #historyTab .nav-link {
+      color: #85628D;
+    }
+  </style>
+</head>
+<body>
+  <%- include('partials/admin_navbar') %>
+
+  <div class="container mt-5">
+    <h2>Full History of Mentors and Mentees</h2>
+    
+    <ul class="nav nav-tabs" id="historyTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="current-mentors-tab" data-toggle="tab" href="#current-mentors" role="tab" aria-controls="current-mentors" aria-selected="true">Current Mentors</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="current-mentees-tab" data-toggle="tab" href="#current-mentees" role="tab" aria-controls="current-mentees" aria-selected="false">Current Mentees</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="past-mentors-tab" data-toggle="tab" href="#past-mentors" role="tab" aria-controls="past-mentors" aria-selected="false">Past Mentors</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="past-mentees-tab" data-toggle="tab" href="#past-mentees" role="tab" aria-controls="past-mentees" aria-selected="false">Past Mentees</a>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="historyTabContent">
+      <!-- Current Mentors -->
+      <div class="tab-pane fade show active" id="current-mentors" role="tabpanel" aria-labelledby="current-mentors-tab">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Date Started</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% currentMentors.forEach(function(mentor) { %>
+              <tr>
+                <td><%= mentor.name %></td>
+                <td><%= mentor.email %></td>
+                <td><%= new Date(mentor.dateStarted).toLocaleDateString() %></td>
+                <td>
+                  <button class="btn btn-danger btn-sm" onclick="confirmDeletion('<%= mentor._id %>', 'mentor')">Delete</button>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Current Mentees -->
+      <div class="tab-pane fade" id="current-mentees" role="tabpanel" aria-labelledby="current-mentees-tab">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Date Started</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% currentMentees.forEach(function(mentee) { %>
+              <tr>
+                <td><%= mentee.name %></td>
+                <td><%= mentee.email %></td>
+                <td><%= new Date(mentee.dateStarted).toLocaleDateString() %></td>
+                <td>
+                  <button class="btn btn-danger btn-sm" onclick="confirmDeletion('<%= mentee._id %>', 'mentee')">Delete</button>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Past Mentors -->
+      <div class="tab-pane fade" id="past-mentors" role="tabpanel" aria-labelledby="past-mentors-tab">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Date Started</th>
+              <th>Date Ended</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% pastMentors.forEach(function(mentor) { %>
+              <tr>
+                <td><%= mentor.name %></td>
+                <td><%= mentor.email %></td>
+                <td><%= new Date(mentor.dateStarted).toLocaleDateString() %></td>
+                <td><%= new Date(mentor.dateEnded).toLocaleDateString() %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Past Mentees -->
+      <div class="tab-pane fade" id="past-mentees" role="tabpanel" aria-labelledby="past-mentees-tab">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Date Started</th>
+              <th>Date Ended</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% pastMentees.forEach(function(mentee) { %>
+              <tr>
+                <td><%= mentee.name %></td>
+                <td><%= mentee.email %></td>
+                <td><%= new Date(mentee.dateStarted).toLocaleDateString() %></td>
+                <td><%= new Date(mentee.dateEnded).toLocaleDateString() %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    function confirmDeletion(id, type) {
+      if (confirm('Are you sure you want to delete this ' + type + '?')) {
+        fetch(`/admin/delete_${type}/${id}`, {
+          method: 'DELETE'
+        }).then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              window.location.reload();
+            } else {
+              alert('Error deleting ' + type);
+            }
+          });
+      }
+    }
+  </script>
+</body>
+</html>
