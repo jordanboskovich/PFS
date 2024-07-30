@@ -44,49 +44,47 @@
     margin-bottom: 50px;
   }
   .content-box {
-  position: relative; /* Set the position context for the absolute positioning of the background */
-  margin-bottom: 20px;
-  padding: 20px;
-  border-radius: 10px; /* Rounded corners */
-  border: 3px solid #6FDD51; /* Border color */
-  background-color: #f5f5f5;
-  transition: transform 0.3s ease;
-}
-    
-    
- .linkBoxText {
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 4vw;
-  background-image: linear-gradient(-100deg,
-      #732685 0%,
-      #732685 35%,
-      #E0D3EC 50%,
-      #732685 65%,
-      #732685 100%);
-  background-size: 170% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  animation: textclip 13s linear infinite;
-}
-
-@keyframes textclip {
-  to {
-    background-position: 400% center;
+    position: relative; 
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 3px solid #6FDD51; 
+    background-color: #f5f5f5;
+    transition: transform 0.3s ease;
   }
-}
-
-
     
-    .linkBoxP{
+    
+  .linkBoxText {
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 4vw;
+    background-image: linear-gradient(-100deg,
+        #732685 0%,
+        #732685 35%,
+        #E0D3EC 50%,
+        #732685 65%,
+        #732685 100%);
+    background-size: 170% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: textclip 13s linear infinite;
+  }
+
+  @keyframes textclip {
+    to {
+      background-position: 400% center;
+    }
+  }
+    
+  .linkBoxP{
       font-size: 2vw;
     
-    }
+  }
 
-p {
-  font-family: montserrat;
-}
+  p {
+    font-family: montserrat;
+  }
     
   .linkBox{
       height: 55vh;
@@ -95,15 +93,13 @@ p {
   .content-box:hover {
     transform: scale(1.05); 
   }
-
-  
     @media (max-width: 575px) {
-    #pfsHeader {
-      margin-left: 25vw;
-    }
-       .greeting {
-    font-size: 20px;
-  }
+      #pfsHeader {
+        margin-left: 25vw;
+      }
+      .greeting {
+      font-size: 20px;
+      }
   }
     
     @media (max-width: 460px) {
@@ -132,7 +128,7 @@ p {
         padding: 5px;
       }
   }
-  .btn-primary{
+    .btn-primary{
       background-color: #9FD8B1;
       border-color: #9FD8B1;
     }

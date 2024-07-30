@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
+// most fields in user schema are optional because mentors and mentees have different values
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,

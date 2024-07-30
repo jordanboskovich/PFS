@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+//for the mentor's notes about their meetings
 const noteSchema = new mongoose.Schema({
   mentor: {
     type: mongoose.Schema.Types.ObjectId,

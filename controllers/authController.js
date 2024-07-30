@@ -1,10 +1,8 @@
-// Importing required modules and dependencies
 import User from '../models/User.js';
 import passport from 'passport';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 
-// Controller function to render login page
 export const login = (req, res) => {
   res.render('login');
 }
@@ -15,23 +13,6 @@ export const verifyLogin = passport.authenticate('local', {
   failureRedirect: '/login',
   failureFlash: false 
 });
-
-// // Controller function to render register page
-// export const register = (req, res) => {
-//   res.render('register');
-// }
-
-// // Middleware to verify and register a new user
-// export const verifyRegister = async (req, res) => {
-//   try {
-//     const { username, password } = req.body;
-//     const user = new User({ username, password });
-//     await user.save();
-//     res.redirect('/login');
-//   } catch (error) {
-//     res.send(error.message);
-//   }
-// };
 
 // Controller function to render change password page
 export const changePassword = (req, res) => {
@@ -77,27 +58,15 @@ export const updatePassword = async (req, res) => {
 // Controller function to toggle user role
 export const toggleUserRole = async (req, res) => {
   try {
-    // Extract user ID from the request body
     const { userId } = req.body;
-
-    // Find the user by ID
     const user = await User.findById(userId);
-
     if (!user) {
-      // If no user is found, send a 404 response
       return res.status(404).send('User not found');
     }
-
-    // Toggle user role
     user.role = user.role === 'admin' ? 'user' : 'admin';
-
-    // Save the updated user
     await user.save();
-
-    // Respond with the updated user information
     res.redirect("/");
   } catch (error) {
-    // If an error occurs, send a 500 response with the error message
     res.status(500).send(error.message);
   }
 };
@@ -106,7 +75,6 @@ export const toggleUserRole = async (req, res) => {
 export const logout = (req, res) => {
   req.logout(function(err) {
     if (err) { return next(err); }
-    // Redirect or respond after successful logout
     res.redirect('/');
   });
 }                        
@@ -124,7 +92,6 @@ export const isAdmin = (req, res, next) => {
   if (req.isAuthenticated() && req.user.role === 'admin') {
     return next();
   }
-  // If the user is not an admin, redirect them or show an error
   res.status(403).send('Access denied');
 }
 
@@ -142,7 +109,6 @@ export const handleForgotPassword = async (req, res) => {
     return res.status(400).send('No account with that email address exists.');
   }
 
-  // Generate reset token
   const token = crypto.randomBytes(20).toString('hex');
   user.resetPasswordToken = token;
   user.resetPasswordExpires = Date.now() + 3600000; // 1 hour

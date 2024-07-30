@@ -48,10 +48,6 @@ router.post('/forgot-password', auth.handleForgotPassword);
 router.get('/reset-password/:token', auth.resetPassword);
 router.post('/reset-password/:token', auth.handleResetPassword);
 
-// // Registration routes
-// router.get('/register', auth.register);
-// router.post('/register', auth.verifyRegister);
-
 router.post('/mentor/addNote', ctrl.isMentor, ctrl.addNote);
 router.get('/admin/notes', ctrl.isAdmin, ctrl.admin_notes);
 

@@ -1,4 +1,3 @@
-// controllers/mainController.js
 import User from '../models/User.js';
 import MeetingLog from '../models/MeetingLog.js';
 import Resource from '../models/Resource.js';
@@ -68,7 +67,7 @@ export const isMentor = (req, res, next) => {
 export const admin_home = async (req, res) => {
   try {
     const admin = await User.findById(req.user._id);
-    res.render('admin_home', { admin }); // Pass admin object to the template
+    res.render('admin_home', { admin }); 
   } catch (err) {
     res.status(500).send('Server Error');
   }
@@ -122,7 +121,7 @@ export const logMeeting = async (req, res) => {
     const newMeetingLog = new MeetingLog({
       mentor: mentorId,
       mentee: menteeId,
-      timesMet: 1, // Increment by 1 each time
+      timesMet: 1,
       date: new Date()
     });
 
@@ -242,7 +241,6 @@ export const mentor_resources = async (req, res) => {
 export const sendReminderEmail = async (req, res) => {
   const { email, PFSEmail } = req.body;
 
-  // Configure the mail transporter
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -251,7 +249,6 @@ export const sendReminderEmail = async (req, res) => {
     }
   });
 
-  // Prepare the recipient emails
   const recipients = [email];
   if (PFSEmail) {
     recipients.push(PFSEmail);
@@ -259,7 +256,7 @@ export const sendReminderEmail = async (req, res) => {
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
-    to: recipients, // Send to both emails if PFSEmail exists
+    to: recipients, 
     subject: 'Reminder to Meet with Your Mentee',
     text: 'This is a reminder to schedule a meeting with your mentee before the end of the month.'
   };
@@ -274,7 +271,6 @@ export const sendReminderEmail = async (req, res) => {
 };
 
 export const sendBulkReminders = async (req, res) => {
-  // Configure the mail transporter
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -287,7 +283,6 @@ export const sendBulkReminders = async (req, res) => {
     const mentors = await User.find({ role: 'mentor', timesMetThisMonth: 0 });
 
     const emailPromises = mentors.map(mentor => {
-      // Prepare the recipient emails
       const recipients = [mentor.email];
       if (mentor.PFSEmail) {
         recipients.push(mentor.PFSEmail);
@@ -295,7 +290,7 @@ export const sendBulkReminders = async (req, res) => {
 
       const mailOptions = {
         from: process.env.EMAIL_USER,
-        to: recipients, // Send to both emails if PFSEmail exists
+        to: recipients, 
         subject: 'Reminder to Meet with Your Mentee',
         text: 'This is a reminder to schedule a meeting with your mentee.'
       };
@@ -314,7 +309,7 @@ export const sendBulkReminders = async (req, res) => {
 
 export const updateMentorProfile = async (req, res) => {
   try {
-    const mentorId = req.user._id; // Assuming the mentor's ID is stored in req.user._id
+    const mentorId = req.user._id; 
     const {
       name, gender, grade, school, phone, email, PFSEmail, parent1Name, parent1Email, parent1Cellphone, parent2Name, parent2Email, parent2Cellphone, homeAddress
     } = req.body;
@@ -430,6 +425,7 @@ export const uploadMentees = async (req, res) => {
   }
 };
 
+// export mentors as a CSV file with the filters
 export const exportMentors = async (req, res) => {
   try {
     const { grade, school, gender } = req.query;
@@ -456,6 +452,7 @@ export const exportMentors = async (req, res) => {
   }
 };
 
+// export mentees as a CSV with the filters
 export const exportMentees = async (req, res) => {
   try {
     const { grade, school, gender } = req.query;
@@ -482,6 +479,7 @@ export const exportMentees = async (req, res) => {
   }
 };
 
+// get the current users from Users in database and past users from History in database
 export const admin_history = async (req, res) => {
   try {
     const currentMentors = await User.find({ role: 'mentor' }).sort({ dateStarted: -1 });

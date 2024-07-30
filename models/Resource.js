@@ -1,4 +1,3 @@
-// models/Resource.js
 import mongoose from 'mongoose';
 
 const ResourceSchema = new mongoose.Schema({

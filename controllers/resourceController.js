@@ -1,4 +1,3 @@
-// controllers/resourceController.js
 import Resource from '../models/Resource.js';
 
 // Get resources

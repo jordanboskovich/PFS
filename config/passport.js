@@ -1,6 +1,7 @@
 import { Strategy as LocalStrategy } from 'passport-local';
 import User from '../models/User.js';
 
+// checks username and password 
 export default function(passport) {
   passport.use(new LocalStrategy(async (username, password, done) => {
     try {

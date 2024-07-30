@@ -20,7 +20,7 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.use('/uploads', express.static('uploads'));
 
-configurePassport(passport); // Configuring passport
+configurePassport(passport); 
 
 // Session setup
 app.use(session({
@@ -86,4 +86,4 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
-export { upload }; // Export the upload configuration
+export { upload }; 
