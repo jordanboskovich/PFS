@@ -367,7 +367,7 @@ export const uploadMentors = async (req, res) => {
         parent1Cellphone: row['Par.1 Phone'],
         parent2Name: row['Par.2 Name'],
         parent2Email: row['Par.2 Email'],
-        parent2Cellphone: row['Par. Phone']
+        parent2Cellphone: row['Par.2 Phone']
       });
 
       await newMentor.save();
@@ -410,7 +410,7 @@ export const uploadMentees = async (req, res) => {
         parent1Cellphone: row['Par.1 Phone'],
         parent2Name: row['Par.2 Name'],
         parent2Email: row['Par.2 Email'],
-        parent2Cellphone: row['Par. Phone'],
+        parent2Cellphone: row['Par.2 Phone'],
         homeAddress: row['Address']
       });
 
