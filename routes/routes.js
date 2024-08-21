@@ -68,4 +68,7 @@ router.get('/admin/history', ctrl.isAdmin, ctrl.admin_history);
 router.delete('/admin/delete_mentor/:id', ctrl.isAdmin, ctrl.delete_mentor);
 router.delete('/admin/delete_mentee/:id', ctrl.isAdmin, ctrl.delete_mentee);
 
+router.get('/admin/add', ctrl.isAdmin, ctrl.getAddAdmin);
+router.post('/admin/add', ctrl.isAdmin, ctrl.addAdmin);
+
 export default router;

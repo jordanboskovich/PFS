@@ -549,3 +549,31 @@ export const delete_mentee = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+// Display form to add a new admin
+export const getAddAdmin = (req, res) => {
+  res.render('add_admin');
+};
+
+// Handle the form submission to add a new admin
+export const addAdmin = async (req, res) => {
+  try {
+    const { username, name, password, email } = req.body;
+
+    // Create a new admin user
+    const newAdmin = new User({
+      username,
+      name,
+      password,
+      email,
+      role: 'admin',
+      dateStarted: new Date()
+    });
+
+    await newAdmin.save();
+    res.redirect('/admin_home');
+  } catch (err) {
+    console.error('Error adding admin:', err);
+    res.status(500).send('Server Error');
+  }
+};
