@@ -5,6 +5,18 @@
   <title>Add New Admin</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <link href="/styles/main.css" rel="stylesheet">
+
+  <style>
+    .btn-primary {
+        background-color: #CBBBE7;
+        border-color: #CBBBE7;
+    }
+
+    .btn-primary:hover {
+        background-color: #B7A4C0;
+        border-color: #B7A4C0;
+    }
+  </style>
 </head>
 <body>
   <%- include('partials/admin_navbar') %>
@@ -29,7 +41,20 @@
       </div>
       <button type="submit" class="btn btn-primary btn-block">Add Admin</button>
     </form>
+
+    <!-- List of Admins -->
+    <div class="mt-5">
+      <h3 class="text-center mb-4">Current Admins</h3>
+      <ul class="list-group mx-auto" style="max-width: 500px;">
+        <% admins.forEach(function(admin) { %>
+          <li class="list-group-item">
+            <strong><%= admin.name %></strong> (<%= admin.username %>) - <%= admin.email %>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
   </div>
+  
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

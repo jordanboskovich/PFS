@@ -67,7 +67,7 @@
                 <td><%= mentor.email %></td>
                 <td><%= new Date(mentor.dateStarted).toLocaleDateString() %></td>
                 <td>
-                  <button class="btn btn-danger btn-sm" onclick="confirmDeletion('<%= mentor._id %>', 'mentor')">Delete</button>
+                  <button class="btn btn-danger btn-sm" onclick="confirmDeletion('<%= mentor._id %>', 'mentor')">Archive</button>
                 </td>
               </tr>
             <% }) %>
@@ -93,7 +93,7 @@
                 <td><%= mentee.email %></td>
                 <td><%= new Date(mentee.dateStarted).toLocaleDateString() %></td>
                 <td>
-                  <button class="btn btn-danger btn-sm" onclick="confirmDeletion('<%= mentee._id %>', 'mentee')">Delete</button>
+                  <button class="btn btn-danger btn-sm" onclick="confirmDeletion('<%= mentee._id %>', 'mentee')">Archive</button>
                 </td>
               </tr>
             <% }) %>
@@ -156,7 +156,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
     function confirmDeletion(id, type) {
-      if (confirm('Are you sure you want to delete this ' + type + '?')) {
+      if (confirm('Are you sure you want to archive this ' + type + '?')) {
         fetch(`/admin/delete_${type}/${id}`, {
           method: 'DELETE'
         }).then(response => response.json())

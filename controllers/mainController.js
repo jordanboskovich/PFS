@@ -551,10 +551,15 @@ export const delete_mentee = async (req, res) => {
 };
 
 // Display form to add a new admin
-export const getAddAdmin = (req, res) => {
-  res.render('add_admin');
+export const getAddAdmin = async (req, res) => {
+  try {
+      const admins = await User.find({ role: 'admin' }); // Fetch all users with the role of 'admin'
+      res.render('add_admin', { admins }); // Pass the admins to the EJS template
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Server Error');
+  }
 };
-
 // Handle the form submission to add a new admin
 export const addAdmin = async (req, res) => {
   try {
