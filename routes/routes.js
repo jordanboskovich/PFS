@@ -74,4 +74,7 @@ router.post('/admin/add', ctrl.isAdmin, ctrl.addAdmin);
 router.post('/admin/promoteGrade', ctrl.isAdmin, ctrl.promoteGrade);
 router.post('/admin/makeAmbassador/:id', ctrl.isAdmin, ctrl.makeAmbassador);
 
+router.post('/admin/updateMentee/:id', ctrl.isAdmin, ctrl.updateMentee);
+
+
 export default router;

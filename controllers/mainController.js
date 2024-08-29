@@ -437,7 +437,7 @@ export const exportMentors = async (req, res) => {
 
     const mentors = await User.find(query).populate('mentee').lean();
 
-    const fields = ['name', 'gender', 'grade', 'school', 'phone', 'PFSEmail', 'email', 'parent1Name', 'parent1Email', 'parent1Cellphone', 'parent2Name', 'parent2Email', 'parent2Cellphone'];
+    const fields = ['name', 'gender', 'grade', 'school', 'phone', 'PFSEmail', 'email', 'parent1Name', 'parent1Email', 'parent1Cellphone', 'parent2Name', 'parent2Email', 'parent2Cellphone', 'timesMetThisMonth'];
     const opts = { fields };
 
     const parser = new Parser(opts);
@@ -599,6 +599,32 @@ export const makeAmbassador = async (req, res) => {
   try {
     const mentorId = req.params.id;
     await User.findByIdAndUpdate(mentorId, { isAmbassador: true });
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false, message: 'Server Error' });
+  }
+};
+
+export const updateMentee = async (req, res) => {
+  try {
+    const menteeId = req.params.id;
+    const updatedData = {
+      name: req.body.name,
+      gender: req.body.gender,
+      grade: req.body.grade,
+      school: req.body.school,
+      PFSEmail: req.body.PFSEmail,
+      parent1Name: req.body.parent1Name,
+      parent1Email: req.body.parent1Email,
+      parent1Cellphone: req.body.parent1Cellphone,
+      parent2Name: req.body.parent2Name,
+      parent2Email: req.body.parent2Email,
+      parent2Cellphone: req.body.parent2Cellphone,
+      homeAddress: req.body.homeAddress
+    };
+
+    await User.findByIdAndUpdate(menteeId, updatedData);
     res.json({ success: true });
   } catch (err) {
     console.error(err);

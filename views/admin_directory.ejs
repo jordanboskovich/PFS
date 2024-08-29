@@ -238,25 +238,69 @@
                       </button>
                     </div>
                     <div class="modal-body">
-                      <p><strong>Name:</strong> <%= mentee.name %></p>
-                      <p><strong>Gender:</strong> <%= mentee.gender %></p>
-                      <p><strong>Grade:</strong> <%= mentee.grade %></p>
-                      <p><strong>School:</strong> <%= mentee.school %></p>
-                      <p><strong>PFS Email:</strong> <%= mentee.PFSEmail %></p>
-                      <p><strong>Parent 1 Name:</strong> <%= mentee.parent1Name %></p>
-                      <p><strong>Parent 1 Email:</strong> <%= mentee.parent1Email %></p>
-                      <p><strong>Parent 1 Cellphone:</strong> <%= mentee.parent1Cellphone %></p>
-                      <p><strong>Parent 2 Name:</strong> <%= mentee.parent2Name %></p>
-                      <p><strong>Parent 2 Email:</strong> <%= mentee.parent2Email %></p>
-                      <p><strong>Parent 2 Cellphone:</strong> <%= mentee.parent2Cellphone %></p>
-                      <p><strong>Home Address:</strong> <%= mentee.homeAddress %></p>
+                      <form id="menteeForm<%= mentee._id %>">
+                        <div class="form-group">
+                          <label for="menteeName<%= mentee._id %>">Name</label>
+                          <input type="text" class="form-control" id="menteeName<%= mentee._id %>" name="name" value="<%= mentee.name %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="menteeGender<%= mentee._id %>">Gender</label>
+                          <select class="form-control" id="menteeGender<%= mentee._id %>" name="gender">
+                            <option value="male" <%= mentee.gender === 'male' ? 'selected' : '' %>>Male</option>
+                            <option value="female" <%= mentee.gender === 'female' ? 'selected' : '' %>>Female</option>
+                            <option value="other" <%= mentee.gender === 'other' ? 'selected' : '' %>>Other</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="menteeGrade<%= mentee._id %>">Grade</label>
+                          <input type="number" class="form-control" id="menteeGrade<%= mentee._id %>" name="grade" value="<%= mentee.grade %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="menteeSchool<%= mentee._id %>">School</label>
+                          <input type="text" class="form-control" id="menteeSchool<%= mentee._id %>" name="school" value="<%= mentee.school %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="menteePFSEmail<%= mentee._id %>">PFS Email</label>
+                          <input type="email" class="form-control" id="menteePFSEmail<%= mentee._id %>" name="PFSEmail" value="<%= mentee.PFSEmail %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="menteeParent1Name<%= mentee._id %>">Parent 1 Name</label>
+                          <input type="text" class="form-control" id="menteeParent1Name<%= mentee._id %>" name="parent1Name" value="<%= mentee.parent1Name %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="menteeParent1Email<%= mentee._id %>">Parent 1 Email</label>
+                          <input type="email" class="form-control" id="menteeParent1Email<%= mentee._id %>" name="parent1Email" value="<%= mentee.parent1Email %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="menteeParent1Cellphone<%= mentee._id %>">Parent 1 Cellphone</label>
+                          <input type="text" class="form-control" id="menteeParent1Cellphone<%= mentee._id %>" name="parent1Cellphone" value="<%= mentee.parent1Cellphone %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="menteeParent2Name<%= mentee._id %>">Parent 2 Name</label>
+                          <input type="text" class="form-control" id="menteeParent2Name<%= mentee._id %>" name="parent2Name" value="<%= mentee.parent2Name %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="menteeParent2Email<%= mentee._id %>">Parent 2 Email</label>
+                          <input type="email" class="form-control" id="menteeParent2Email<%= mentee._id %>" name="parent2Email" value="<%= mentee.parent2Email %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="menteeParent2Cellphone<%= mentee._id %>">Parent 2 Cellphone</label>
+                          <input type="text" class="form-control" id="menteeParent2Cellphone<%= mentee._id %>" name="parent2Cellphone" value="<%= mentee.parent2Cellphone %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="menteeHomeAddress<%= mentee._id %>">Home Address</label>
+                          <input type="text" class="form-control" id="menteeHomeAddress<%= mentee._id %>" name="homeAddress" value="<%= mentee.homeAddress %>">
+                        </div>
+                      </form>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary" onclick="saveMenteeChanges('<%= mentee._id %>')">Save Changes</button>
                     </div>
                   </div>
                 </div>
               </div>
+
             <% }) %>
           </tbody>
         </table>
@@ -563,6 +607,28 @@
         });
       }
     }
+
+    function saveMenteeChanges(menteeId) {
+      const form = document.getElementById(`menteeForm${menteeId}`);
+      const formData = new FormData(form);
+
+      if (confirm('Are you sure you want to save these changes?')) {
+        fetch(`/admin/updateMentee/${menteeId}`, {
+          method: 'POST',
+          body: new URLSearchParams(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Mentee information updated successfully.');
+            window.location.reload(); // Reload the page to reflect the updated information
+          } else {
+            alert('Error updating mentee information.');
+          }
+        });
+      }
+    }
+
 
   </script>
   
