@@ -582,3 +582,15 @@ export const addAdmin = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+export const promoteGrade = async (req, res) => {
+  try {
+    // Update grades for all mentors and mentees
+    await User.updateMany({ role: { $in: ['mentor', 'mentee'] } }, { $inc: { grade: 1 } });
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false, message: 'Server Error' });
+  }
+};

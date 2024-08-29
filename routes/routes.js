@@ -71,4 +71,6 @@ router.delete('/admin/delete_mentee/:id', ctrl.isAdmin, ctrl.delete_mentee);
 router.get('/admin/add', ctrl.isAdmin, ctrl.getAddAdmin);
 router.post('/admin/add', ctrl.isAdmin, ctrl.addAdmin);
 
+router.post('/admin/promoteGrade', ctrl.isAdmin, ctrl.promoteGrade);
+
 export default router;
