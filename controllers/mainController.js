@@ -594,3 +594,14 @@ export const promoteGrade = async (req, res) => {
     res.json({ success: false, message: 'Server Error' });
   }
 };
+
+export const makeAmbassador = async (req, res) => {
+  try {
+    const mentorId = req.params.id;
+    await User.findByIdAndUpdate(mentorId, { isAmbassador: true });
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false, message: 'Server Error' });
+  }
+};

@@ -72,5 +72,6 @@ router.get('/admin/add', ctrl.isAdmin, ctrl.getAddAdmin);
 router.post('/admin/add', ctrl.isAdmin, ctrl.addAdmin);
 
 router.post('/admin/promoteGrade', ctrl.isAdmin, ctrl.promoteGrade);
+router.post('/admin/makeAmbassador/:id', ctrl.isAdmin, ctrl.makeAmbassador);
 
 export default router;

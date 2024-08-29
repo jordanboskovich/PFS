@@ -29,6 +29,10 @@ const UserSchema = new mongoose.Schema({
   parent2Email: String,
   parent2Cellphone: String,
   homeAddress: String,
+  isAmbassador: {
+    type: Boolean,
+    default: false
+  },
   resetPasswordToken: String,
   resetPasswordExpires: Date,
   mentee: {

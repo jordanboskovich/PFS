@@ -105,7 +105,12 @@
                 <td>
                   <button class="btn btn-primary" data-toggle="modal" data-target="#mentorDetailsModal<%= mentor._id %>">View Details</button>
                 </td>
-                <td><%= mentor.name %></td>
+                <td>
+                  <%= mentor.name %> 
+                  <% if (mentor.isAmbassador) { %>
+                    <span class="badge badge-success">Ambassador</span>
+                  <% } %>
+                </td>
                 <td><%= mentor.grade %></td>
                 <td><%= mentor.school %></td>
                 <td><%= mentor.mentee ? mentor.mentee.name : 'None' %></td>
@@ -140,6 +145,14 @@
                       <p><strong>Parent 2 Name:</strong> <%= mentor.parent2Name %></p>
                       <p><strong>Parent 2 Email:</strong> <%= mentor.parent2Email %></p>
                       <p><strong>Parent 2 Cellphone:</strong> <%= mentor.parent2Cellphone %></p>
+
+                      <% if (!mentor.isAmbassador) { %>
+                        <!-- Ambassador Button -->
+                        <button class="btn btn-success mt-3" id="ambassadorButton<%= mentor._id %>" onclick="makeAmbassador('<%= mentor._id %>')">Make Ambassador</button>
+                      <% } else { %>
+                        <p class="text-success mt-3"><strong>This mentor is an Ambassador</strong></p>
+                      <% } %>
+
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -518,21 +531,38 @@
     });
     
     document.getElementById('promoteGradeButton').addEventListener('click', function() {
-  if (confirm('Are you sure you want to promote the grades for all mentors and mentees?')) {
-    fetch('/admin/promoteGrade', {
-      method: 'POST'
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        alert('Grades promoted successfully');
-        window.location.reload(); 
-      } else {
-        alert('Error promoting grades');
+      if (confirm('Are you sure you want to promote the grades for all mentors and mentees?')) {
+        fetch('/admin/promoteGrade', {
+          method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Grades promoted successfully');
+            window.location.reload(); 
+          } else {
+            alert('Error promoting grades');
+          }
+        });
       }
     });
-  }
-});
+
+    function makeAmbassador(mentorId) {
+      if (confirm('Are you sure you want to make this mentor an ambassador?')) {
+        fetch(`/admin/makeAmbassador/${mentorId}`, {
+          method: 'POST',
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Mentor has been promoted to ambassador.');
+            window.location.reload(); // Reload the page to reflect the change
+          } else {
+            alert('Error promoting mentor to ambassador.');
+          }
+        });
+      }
+    }
 
   </script>
   
