@@ -452,6 +452,49 @@ export const exportMentors = async (req, res) => {
   }
 };
 
+export const exportPairs = async (req, res) => {
+  try {
+    const query = { role: 'mentor' };
+
+    const mentors = await User.find(query).populate('mentee').lean();
+
+    const mentorMenteePairs = mentors.map(mentor => ({
+      mentorName: mentor.name,
+      mentorSchool: mentor.school,
+      mentorGrade: mentor.grade,
+      mentorEmail: mentor.PFSEmail,
+      menteeName: mentor.mentee?.name || 'N/A', 
+      menteeSchool: mentor.mentee?.school || 'N/A',
+      menteeGrade: mentor.mentee?.grade || 'N/A',
+      menteeEmail: mentor.mentee?.PFSEmail || 'N/A',
+    }));
+
+    const fields = [
+      'mentorName',
+      'mentorSchool',
+      'mentorGrade',
+      'mentorEmail',
+      'menteeName',
+      'menteeSchool',
+      'menteeGrade',
+      'menteeEmail',
+    ];
+
+    const opts = { fields };
+
+    const parser = new Parser(opts);
+    const csv = parser.parse(mentorMenteePairs);
+
+    res.header('Content-Type', 'text/csv');
+    res.attachment('mentor_mentee_pairs.csv');
+    res.send(csv);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+};
+
+
 // export mentees as a CSV with the filters
 export const exportMentees = async (req, res) => {
   try {

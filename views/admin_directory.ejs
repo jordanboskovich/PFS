@@ -51,6 +51,7 @@
           Mentors
           <button id="exportMentorsButton" class="btn btn-sm btn-outline-secondary">Export CSV</button>
           <button id="toggleMentorFilters" class="btn btn-sm btn-outline-secondary">Toggle Filters</button>
+          <button id="exportMentorPairs" class="btn btn-sm btn-outline-secondary">Export Pairs CSV</button>
         </h3>
         <div id="mentorFilters" class="collapse form-row">
           <div class="col">
@@ -86,6 +87,9 @@
           </form>          
           <button class="btn btn-secondary" id="resetMeetingsButton">Reset Meetings For New Month</button>
           <button class="btn btn-secondary" id="sendBulkRemindersButton">Send Reminder to All</button>
+        </div>
+        <div class="input-group mb-3">
+          <input type="text" id="mentorSearch" class="form-control" placeholder="Search Mentors by Name" aria-label="Search Mentors">
         </div>
         <table class="table">
           <thead>
@@ -146,6 +150,12 @@
                       <p><strong>Parent 2 Email:</strong> <%= mentor.parent2Email %></p>
                       <p><strong>Parent 2 Cellphone:</strong> <%= mentor.parent2Cellphone %></p>
 
+                      <p><strong>Mentee Name:</strong> <%= mentor.mentee ? mentor.mentee.name : 'None' %></p>
+                      <p><strong>Mentee Grade:</strong> <%= mentor.mentee ? mentor.mentee.grade : 'None' %></p>
+                      <p><strong>Mentee School:</strong> <%= mentor.mentee ? mentor.mentee.school : 'None' %></p>
+                      <p><strong>Mentee Email:</strong> <%= mentor.mentee ? mentor.mentee.PFSEmail : 'None' %></p>
+
+
                       <% if (!mentor.isAmbassador) { %>
                         <!-- Ambassador Button -->
                         <button class="btn btn-success mt-3" id="ambassadorButton<%= mentor._id %>" onclick="makeAmbassador('<%= mentor._id %>')">Make Ambassador</button>
@@ -204,6 +214,9 @@
               </div>
             </div>
           </form>
+        </div>
+        <div class="input-group mb-3">
+          <input type="text" id="menteeSearch" class="form-control" placeholder="Search Mentees by Name" aria-label="Search Mentees">
         </div>
         <table class="table">
           <thead>
@@ -554,6 +567,10 @@
       window.location.href = '/admin/exportMentors';
     });
 
+    document.getElementById('exportMentorPairs').addEventListener('click', function() {
+      window.location.href = '/admin/exportPairs';
+    });
+
     document.getElementById('exportMenteesButton').addEventListener('click', function() {
       window.location.href = '/admin/exportMentees';
     });
@@ -628,6 +645,34 @@
         });
       }
     }
+
+    // Mentor search functionality
+      document.getElementById('mentorSearch').addEventListener('input', function() {
+        const searchValue = this.value.toLowerCase();
+        const mentorRows = document.querySelectorAll('#mentors tbody tr');
+        mentorRows.forEach(row => {
+          const mentorName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+          if (mentorName.includes(searchValue)) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+
+      // Mentee search functionality
+      document.getElementById('menteeSearch').addEventListener('input', function() {
+        const searchValue = this.value.toLowerCase();
+        const menteeRows = document.querySelectorAll('#mentees tbody tr');
+        menteeRows.forEach(row => {
+          const menteeName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+          if (menteeName.includes(searchValue)) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
 
 
   </script>

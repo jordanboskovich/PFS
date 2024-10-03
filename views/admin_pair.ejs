@@ -49,6 +49,9 @@
       <div class="col-md-6">
         <h3>Mentors</h3>
         <div class="form-group">
+          <input type="text" id="mentorSearch" class="form-control" placeholder="Search Mentors by Name">
+        </div>
+        <div class="form-group">
           <label for="mentorSort">Sort by</label>
           <select class="form-control" id="mentorSort" onchange="sortList('mentor-list', this.value)">
             <option value="name">Name</option>
@@ -68,6 +71,9 @@
       </div>
       <div class="col-md-6">
         <h3>Mentees</h3>
+        <div class="form-group">
+          <input type="text" id="menteeSearch" class="form-control" placeholder="Search Mentees by Name">
+        </div>
         <div class="form-group">
           <label for="menteeSort">Sort by</label>
           <select class="form-control" id="menteeSort" onchange="sortList('mentee-list', this.value)">
@@ -186,6 +192,34 @@
       });
       items.forEach(item => list.appendChild(item));
     }
+
+    // Mentor search functionality
+      document.getElementById('mentorSearch').addEventListener('input', function() {
+        const searchValue = this.value.toLowerCase();
+        const mentorItems = document.querySelectorAll('#mentor-list .list-group-item');
+        mentorItems.forEach(item => {
+          const mentorName = item.getAttribute('data-name').toLowerCase();
+          if (mentorName.includes(searchValue)) {
+            item.style.display = '';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+
+      // Mentee search functionality
+      document.getElementById('menteeSearch').addEventListener('input', function() {
+        const searchValue = this.value.toLowerCase();
+        const menteeItems = document.querySelectorAll('#mentee-list .list-group-item');
+        menteeItems.forEach(item => {
+          const menteeName = item.getAttribute('data-name').toLowerCase();
+          if (menteeName.includes(searchValue)) {
+            item.style.display = '';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
   </script>
 </body>
 </html>
