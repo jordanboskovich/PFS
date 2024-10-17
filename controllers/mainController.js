@@ -197,9 +197,22 @@ export const addUser = async (req, res) => {
       parent2Name, parent2Email, parent2Cellphone, homeAddress
     } = req.body;
 
+    let generatedUsername = username;
+
+    // If the user is a mentee, generate a username similar to the Excel upload logic
+    if (role === 'mentee') {
+      const randomString = Math.random().toString(36).substring(2, 10);
+      const nameParts = name.split(' ');
+      const firstName = nameParts[0].toLowerCase();
+      const lastName = nameParts.length > 1 ? nameParts[1].toLowerCase() : 'unknown';
+      generatedUsername = `${firstName}_${lastName}_${randomString}`;
+    }
+
+    console.log('Final Username:', generatedUsername); // Ensure the username is not null
+
     const newUser = new User({
-      username: role === 'mentee' ? undefined : username,
-      password: role === 'mentee' ? undefined : password,
+      username: generatedUsername, // Always provide a username, even for mentees
+      password: role === 'mentee' ? undefined : password, // Mentees might not need a password
       role,
       name,
       gender,
@@ -218,12 +231,20 @@ export const addUser = async (req, res) => {
       dateStarted: new Date()
     });
 
+    console.log('New user object before saving:', newUser);
+
+    // Saving the new user
     await newUser.save();
+
+    console.log('User saved successfully');
     res.redirect('/admin/directory');
   } catch (err) {
+    console.error('Error in addUser function:', err);
     res.status(500).send('Server Error');
   }
 };
+
+
 
 export const getAddUser = (req, res) => {
   res.render('add_user');
