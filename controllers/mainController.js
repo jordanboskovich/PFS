@@ -484,21 +484,38 @@ export const exportPairs = async (req, res) => {
       mentorSchool: mentor.school,
       mentorGrade: mentor.grade,
       mentorEmail: mentor.PFSEmail,
+      mentorParent1Name: mentor.parent1Name ? mentor.parent1Name : 'N/A',
+      mentorParent1Email: mentor.parent1Email ? mentor.parent1Email : 'N/A',
+      mentorParent2Name: mentor.parent2Name ? mentor.parent2Name : 'N/A',
+      mentorParent2Email: mentor.parent2Email ? mentor.parent2Email : 'N/A',
       menteeName: mentor.mentee?.name || 'N/A', 
       menteeSchool: mentor.mentee?.school || 'N/A',
       menteeGrade: mentor.mentee?.grade || 'N/A',
       menteeEmail: mentor.mentee?.PFSEmail || 'N/A',
+      menteeParent1Name: mentor.mentee?.parent1Name ? mentor.mentee.parent1Name : 'N/A',
+      menteeParent1Email: mentor.mentee?.parent1Email ? mentor.mentee.parent1Email : 'N/A',
+      menteeParent2Name: mentor.mentee?.parent2Name ? mentor.mentee.parent2Name : 'N/A',
+      menteeParent2Email: mentor.mentee?.parent2Email ? mentor.mentee.parent2Email : 'N/A'
     }));
+    
 
     const fields = [
       'mentorName',
       'mentorSchool',
       'mentorGrade',
       'mentorEmail',
+      'mentorParent1Name',
+      'mentorParent1Email',
+      'mentorParent2Name',
+      'mentorParent2Email',
       'menteeName',
       'menteeSchool',
       'menteeGrade',
       'menteeEmail',
+      'menteeParent1Name',
+      'menteeParent1Email',
+      'menteeParent2Name',
+      'menteeParent2Email',
     ];
 
     const opts = { fields };
