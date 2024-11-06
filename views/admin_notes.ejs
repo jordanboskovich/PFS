@@ -34,6 +34,10 @@
   <br><br>
   
   <div class="container">
+
+    <button class="btn btn-primary mb-3 mr-2" onclick="downloadNotes()">Download Notes</button>
+    <button class="btn btn-danger mb-3" onclick="clearNotes()">Clear Notes</button>
+
     <h2>Meeting Notes</h2>
     <table class="table table-bordered">
       <thead>
@@ -58,5 +62,44 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script>
+  function downloadNotes() {
+    const data = [];
+    const rows = document.querySelectorAll("table tbody tr");
+    rows.forEach(row => {
+      const cells = row.querySelectorAll("td");
+      const rowData = {
+        Mentor: cells[0].innerText,
+        Date: cells[1].innerText,
+        Note: cells[2].innerText
+      };
+      data.push(rowData);
+    });
+
+    // Create Excel workbook and worksheet
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(data);
+    XLSX.utils.book_append_sheet(wb, ws, "Meeting Notes");
+
+    // Download the file
+    XLSX.writeFile(wb, "Meeting_Notes.xlsx");
+  }
+  function clearNotes() {
+    if (confirm("Are you sure you want to clear the meeting notes? This action cannot be undone. Save notes in a spreadsheet before deleting.")) {
+      fetch('/admin/clear_notes', {
+        method: 'DELETE'
+      }).then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.reload();
+          } else {
+            alert("Error clearing notes.");
+          }
+        });
+    }
+  }
+  </script>
+
 </body>
 </html>

@@ -388,7 +388,8 @@ export const uploadMentors = async (req, res) => {
         parent1Cellphone: row['Par.1 Phone'],
         parent2Name: row['Par.2 Name'],
         parent2Email: row['Par.2 Email'],
-        parent2Cellphone: row['Par.2 Phone']
+        parent2Cellphone: row['Par.2 Phone'],
+        homeAddress: row['Address']
       });
 
       await newMentor.save();
@@ -458,7 +459,7 @@ export const exportMentors = async (req, res) => {
 
     const mentors = await User.find(query).populate('mentee').lean();
 
-    const fields = ['name', 'gender', 'grade', 'school', 'phone', 'PFSEmail', 'email', 'parent1Name', 'parent1Email', 'parent1Cellphone', 'parent2Name', 'parent2Email', 'parent2Cellphone', 'timesMetThisMonth'];
+    const fields = ['name', 'gender', 'grade', 'school', 'phone', 'PFSEmail', 'email', 'parent1Name', 'parent1Email', 'parent1Cellphone', 'parent2Name', 'parent2Email', 'parent2Cellphone', 'timesMetThisMonth', 'homeAddress'];
     const opts = { fields };
 
     const parser = new Parser(opts);
@@ -710,5 +711,16 @@ export const updateMentee = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.json({ success: false, message: 'Server Error' });
+  }
+};
+
+
+export const clearNotes = async (req, res) => {
+  try {
+    await Note.deleteMany({});
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error clearing notes:", error);
+    res.json({ success: false });
   }
 };

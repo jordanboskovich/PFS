@@ -77,5 +77,6 @@ router.post('/admin/makeAmbassador/:id', ctrl.isAdmin, ctrl.makeAmbassador);
 
 router.post('/admin/updateMentee/:id', ctrl.isAdmin, ctrl.updateMentee);
 
+router.delete('/admin/clear_notes', ctrl.clearNotes);
 
 export default router;
