@@ -332,11 +332,11 @@ export const updateMentorProfile = async (req, res) => {
   try {
     const mentorId = req.user._id; 
     const {
-      name, gender, grade, school, phone, email, PFSEmail, parent1Name, parent1Email, parent1Cellphone, parent2Name, parent2Email, parent2Cellphone, homeAddress
+      name, gender, grade, school, phone, email, PFSEmail, parent1Name, parent1Email, parent1Cellphone, parent2Name, parent2Email, parent2Cellphone, homeAddress, spreadsheetLink
     } = req.body;
 
     await User.findByIdAndUpdate(mentorId, {
-      name, gender, grade, school, phone, email, PFSEmail, parent1Name, parent1Email, parent1Cellphone, parent2Name, parent2Email, parent2Cellphone, homeAddress
+      name, gender, grade, school, phone, email, PFSEmail, parent1Name, parent1Email, parent1Cellphone, parent2Name, parent2Email, parent2Cellphone, homeAddress, spreadsheetLink
     });
 
     res.redirect('/mentor/profile');
