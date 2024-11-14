@@ -64,6 +64,7 @@ router.post('/admin/uploadMentees', upload.single('menteeFile'), ctrl.uploadMent
 router.get('/admin/exportMentors', ctrl.isAdmin, ctrl.exportMentors);
 router.get('/admin/exportMentees', ctrl.isAdmin, ctrl.exportMentees);
 router.get('/admin/exportPairs', ctrl.isAdmin, ctrl.exportPairs);
+router.get('/mentor/exportPairs', ctrl.isAmbassador, ctrl.exportPairs);
 
 router.get('/admin/history', ctrl.isAdmin, ctrl.admin_history);
 router.delete('/admin/delete_mentor/:id', ctrl.isAdmin, ctrl.delete_mentor);
@@ -74,6 +75,8 @@ router.post('/admin/add', ctrl.isAdmin, ctrl.addAdmin);
 
 router.post('/admin/promoteGrade', ctrl.isAdmin, ctrl.promoteGrade);
 router.post('/admin/makeAmbassador/:id', ctrl.isAdmin, ctrl.makeAmbassador);
+router.post('/admin/demoteAmbassador/:id', ctrl.isAdmin, ctrl.demoteAmbassador);
+
 
 router.post('/admin/updateMentee/:id', ctrl.isAdmin, ctrl.updateMentee);
 

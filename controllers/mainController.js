@@ -64,6 +64,13 @@ export const isMentor = (req, res, next) => {
   res.status(403).send('Access denied');
 };
 
+export const isAmbassador = (req, res, next) => {
+  if (req.user && req.user.isAmbassador) {
+    return next();
+  }
+  return res.status(403).send('Access Denied');
+};
+
 export const admin_home = async (req, res) => {
   try {
     const admin = await User.findById(req.user._id);
@@ -332,11 +339,11 @@ export const updateMentorProfile = async (req, res) => {
   try {
     const mentorId = req.user._id; 
     const {
-      name, gender, grade, school, phone, email, PFSEmail, parent1Name, parent1Email, parent1Cellphone, parent2Name, parent2Email, parent2Cellphone, homeAddress, spreadsheetLink
+      username, name, gender, grade, school, phone, email, PFSEmail, parent1Name, parent1Email, parent1Cellphone, parent2Name, parent2Email, parent2Cellphone, homeAddress, spreadsheetLink
     } = req.body;
 
     await User.findByIdAndUpdate(mentorId, {
-      name, gender, grade, school, phone, email, PFSEmail, parent1Name, parent1Email, parent1Cellphone, parent2Name, parent2Email, parent2Cellphone, homeAddress, spreadsheetLink
+      username, name, gender, grade, school, phone, email, PFSEmail, parent1Name, parent1Email, parent1Cellphone, parent2Name, parent2Email, parent2Cellphone, homeAddress, spreadsheetLink
     });
 
     res.redirect('/mentor/profile');
@@ -685,6 +692,17 @@ export const makeAmbassador = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.json({ success: false, message: 'Server Error' });
+  }
+};
+
+export const demoteAmbassador = async (req, res) => {
+  try {
+    const mentorId = req.params.id;
+    await User.findByIdAndUpdate(mentorId, { isAmbassador: false });
+    res.status(200).send('Mentor demoted successfully');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error demoting mentor');
   }
 };
 

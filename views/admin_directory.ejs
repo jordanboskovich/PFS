@@ -50,7 +50,7 @@
         <h3>
           Mentors
           <button id="exportMentorsButton" class="btn btn-sm btn-outline-secondary">Export CSV</button>
-          <button id="toggleMentorFilters" class="btn btn-sm btn-outline-secondary">Toggle Filters</button>
+          <button id="toggleMentorFilters" class="btn btn-sm btn-outline-secondary"> < Toggle Filters</button>
           <button id="exportMentorPairs" class="btn btn-sm btn-outline-secondary">Export Pairs CSV</button>
         </h3>
         <div id="mentorFilters" class="collapse form-row">
@@ -163,6 +163,7 @@
                         <button class="btn btn-success mt-3" id="ambassadorButton<%= mentor._id %>" onclick="makeAmbassador('<%= mentor._id %>')">Make Ambassador</button>
                       <% } else { %>
                         <p class="text-success mt-3"><strong>This mentor is an Ambassador</strong></p>
+                        <button class="btn btn-danger mt-2" id="demoteButton<%= mentor._id %>" onclick="demoteAmbassador('<%= mentor._id %>')">Demote from Ambassador</button>
                       <% } %>
 
                     </div>
@@ -675,6 +676,26 @@
           }
         });
       });
+
+
+      function demoteAmbassador(mentorId) {
+        fetch(`/admin/demoteAmbassador/${mentorId}`, {
+          method: 'POST',
+        })
+        .then(response => {
+          if (response.ok) {
+            document.getElementById(`demoteButton${mentorId}`).style.display = 'none';
+            alert('Mentor has been demoted from Ambassador status.');
+            location.reload();
+          } else {
+            alert('Failed to demote mentor. Please try again.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred.');
+        });
+      }
 
 
   </script>
