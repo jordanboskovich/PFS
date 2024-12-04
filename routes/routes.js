@@ -79,6 +79,8 @@ router.post('/admin/demoteAmbassador/:id', ctrl.isAdmin, ctrl.demoteAmbassador);
 
 
 router.post('/admin/updateMentee/:id', ctrl.isAdmin, ctrl.updateMentee);
+router.post('/admin/updateMentor/:id', ctrl.isAdmin, ctrl.updateMentor);
+
 
 router.delete('/admin/clear_notes', ctrl.clearNotes);
 

@@ -129,34 +129,99 @@
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="mentorDetailsModalLabel<%= mentor._id %>">Mentor Details</h5>
+                      <h5 class="modal-title" id="mentorDetailsModalLabel<%= mentor._id %>">Edit Mentor Details</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
                     <div class="modal-body">
-                      <p><strong>Username:</strong> <%= mentor.username %></p>
-                      <p><strong>Name:</strong> <%= mentor.name %></p>
-                      <p><strong>Gender:</strong> <%= mentor.gender %></p>
-                      <p><strong>Grade:</strong> <%= mentor.grade %></p>
-                      <p><strong>School:</strong> <%= mentor.school %></p>
-                      <p><strong>Email:</strong> <%= mentor.email %></p>
-                      <p><strong>Phone:</strong> <%= mentor.phone %></p>
-                      <p><strong>PFS Email:</strong> <%= mentor.PFSEmail %></p>
-                      <p><strong>Parent 1 Name:</strong> <%= mentor.parent1Name %></p>
-                      <p><strong>Parent 1 Email:</strong> <%= mentor.parent1Email %></p>
-                      <p><strong>Parent 1 Cellphone:</strong> <%= mentor.parent1Cellphone %></p>
-                      <p><strong>Parent 2 Name:</strong> <%= mentor.parent2Name %></p>
-                      <p><strong>Parent 2 Email:</strong> <%= mentor.parent2Email %></p>
-                      <p><strong>Parent 2 Cellphone:</strong> <%= mentor.parent2Cellphone %></p>
-                      <p><strong>Home Address:</strong> <%= mentor.homeAddress %></p>
-                      <p><strong>Meeting Log Spreadsheet:</strong> <%= mentor.spreadsheetLink %></p>
-
-                      <p><strong>Mentee Name:</strong> <%= mentor.mentee ? mentor.mentee.name : 'None' %></p>
-                      <p><strong>Mentee Grade:</strong> <%= mentor.mentee ? mentor.mentee.grade : 'None' %></p>
-                      <p><strong>Mentee School:</strong> <%= mentor.mentee ? mentor.mentee.school : 'None' %></p>
-                      <p><strong>Mentee Email:</strong> <%= mentor.mentee ? mentor.mentee.PFSEmail : 'None' %></p>
-
+                      <form id="mentorForm<%= mentor._id %>">
+                        <div class="form-group">
+                          <label for="mentorUsername<%= mentor._id %>">Username</label>
+                          <input type="text" class="form-control" id="mentorUsername<%= mentor._id %>" name="username" value="<%= mentor.username %>" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorName<%= mentor._id %>">Name</label>
+                          <input type="text" class="form-control" id="mentorName<%= mentor._id %>" name="name" value="<%= mentor.name %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorGender<%= mentor._id %>">Gender</label>
+                          <select class="form-control" id="mentorGender<%= mentor._id %>" name="gender">
+                            <option value="male" <%= mentor.gender === 'male' ? 'selected' : '' %>>Male</option>
+                            <option value="female" <%= mentor.gender === 'female' ? 'selected' : '' %>>Female</option>
+                            <option value="other" <%= mentor.gender === 'other' ? 'selected' : '' %>>Other</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorGrade<%= mentor._id %>">Grade</label>
+                          <input type="number" class="form-control" id="mentorGrade<%= mentor._id %>" name="grade" value="<%= mentor.grade %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorSchool<%= mentor._id %>">School</label>
+                          <input type="text" class="form-control" id="mentorSchool<%= mentor._id %>" name="school" value="<%= mentor.school %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorEmail<%= mentor._id %>">Email</label>
+                          <input type="email" class="form-control" id="mentorEmail<%= mentor._id %>" name="email" value="<%= mentor.email %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorPhone<%= mentor._id %>">Phone</label>
+                          <input type="text" class="form-control" id="mentorPhone<%= mentor._id %>" name="phone" value="<%= mentor.phone %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorPFSEmail<%= mentor._id %>">PFS Email</label>
+                          <input type="email" class="form-control" id="mentorPFSEmail<%= mentor._id %>" name="PFSEmail" value="<%= mentor.PFSEmail %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorParent1Name<%= mentor._id %>">Parent 1 Name</label>
+                          <input type="text" class="form-control" id="mentorParent1Name<%= mentor._id %>" name="parent1Name" value="<%= mentor.parent1Name %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorParent1Email<%= mentor._id %>">Parent 1 Email</label>
+                          <input type="email" class="form-control" id="mentorParent1Email<%= mentor._id %>" name="parent1Email" value="<%= mentor.parent1Email %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorParent1Cellphone<%= mentor._id %>">Parent 1 Cellphone</label>
+                          <input type="text" class="form-control" id="mentorParent1Cellphone<%= mentor._id %>" name="parent1Cellphone" value="<%= mentor.parent1Cellphone %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorParent2Name<%= mentor._id %>">Parent 2 Name</label>
+                          <input type="text" class="form-control" id="mentorParent2Name<%= mentor._id %>" name="parent2Name" value="<%= mentor.parent2Name %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorParent2Email<%= mentor._id %>">Parent 2 Email</label>
+                          <input type="email" class="form-control" id="mentorParent2Email<%= mentor._id %>" name="parent2Email" value="<%= mentor.parent2Email %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorParent2Cellphone<%= mentor._id %>">Parent 2 Cellphone</label>
+                          <input type="text" class="form-control" id="mentorParent2Cellphone<%= mentor._id %>" name="parent2Cellphone" value="<%= mentor.parent2Cellphone %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorHomeAddress<%= mentor._id %>">Home Address</label>
+                          <input type="text" class="form-control" id="mentorHomeAddress<%= mentor._id %>" name="homeAddress" value="<%= mentor.homeAddress %>">
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorSpreadsheetLink<%= mentor._id %>">Meeting Log Spreadsheet</label>
+                          <input type="text" class="form-control" id="mentorSpreadsheetLink<%= mentor._id %>" name="spreadsheetLink" value="<%= mentor.spreadsheetLink %>">
+                        </div>
+                        <h6>Mentee Information</h6>
+                        <div class="form-group">
+                          <label for="mentorMenteeName<%= mentor._id %>">Mentee Name</label>
+                          <input type="text" class="form-control" id="mentorMenteeName<%= mentor._id %>" value="<%= mentor.mentee ? mentor.mentee.name : 'None' %>" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorMenteeGrade<%= mentor._id %>">Mentee Grade</label>
+                          <input type="text" class="form-control" id="mentorMenteeGrade<%= mentor._id %>" value="<%= mentor.mentee ? mentor.mentee.grade : 'None' %>" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorMenteeSchool<%= mentor._id %>">Mentee School</label>
+                          <input type="text" class="form-control" id="mentorMenteeSchool<%= mentor._id %>" value="<%= mentor.mentee ? mentor.mentee.school : 'None' %>" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label for="mentorMenteeEmail<%= mentor._id %>">Mentee Email</label>
+                          <input type="text" class="form-control" id="mentorMenteeEmail<%= mentor._id %>" value="<%= mentor.mentee ? mentor.mentee.PFSEmail : 'None' %>" readonly>
+                        </div>
+                      </form>
 
                       <% if (!mentor.isAmbassador) { %>
                         <!-- Ambassador Button -->
@@ -169,10 +234,13 @@
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary" onclick="saveMentorChanges('<%= mentor._id %>')">Save Changes</button>
                     </div>
                   </div>
                 </div>
               </div>
+
+
             <% }) %>
           </tbody>
         </table>
@@ -648,6 +716,28 @@
         });
       }
     }
+
+    function saveMentorChanges(mentorId) {
+      const form = document.getElementById(`mentorForm${mentorId}`);
+      const formData = new FormData(form);
+
+      if (confirm('Are you sure you want to save these changes?')) {
+        fetch(`/admin/updateMentor/${mentorId}`, {
+          method: 'POST',
+          body: new URLSearchParams(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Mentor information updated successfully.');
+            window.location.reload(); // Reload to reflect changes
+          } else {
+            alert('Error updating mentor information.');
+          }
+        });
+      }
+    }
+
 
     // Mentor search functionality
       document.getElementById('mentorSearch').addEventListener('input', function() {

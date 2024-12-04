@@ -732,6 +732,37 @@ export const updateMentee = async (req, res) => {
   }
 };
 
+export const updateMentor = async (req, res) => {
+  try {
+    const mentorId = req.params.id;
+    const updatedData = {
+      username: req.body.username,
+      name: req.body.name,
+      gender: req.body.gender,
+      grade: req.body.grade,
+      school: req.body.school,
+      email: req.body.email,
+      phone: req.body.phone,
+      PFSEmail: req.body.PFSEmail,
+      parent1Name: req.body.parent1Name,
+      parent1Email: req.body.parent1Email,
+      parent1Cellphone: req.body.parent1Cellphone,
+      parent2Name: req.body.parent2Name,
+      parent2Email: req.body.parent2Email,
+      parent2Cellphone: req.body.parent2Cellphone,
+      homeAddress: req.body.homeAddress,
+      spreadsheetLink: req.body.spreadsheetLink,
+    };
+
+    await User.findByIdAndUpdate(mentorId, updatedData);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false, message: 'Server Error' });
+  }
+};
+
+
 
 export const clearNotes = async (req, res) => {
   try {
